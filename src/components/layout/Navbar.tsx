@@ -4,7 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, ArrowRight } from "lucide-react";
+import { resolveActiveNavHref } from "@/lib/motion/velocity-highlight";
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { VelocityHighlight } from "@/components/common/VelocityHighlight";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -27,6 +29,10 @@ const NAV_LINKS = [
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const activeDesktopHref = resolveActiveNavHref(
+    pathname,
+    NAV_LINKS.map((item) => item.href)
+  );
 
   return (
     <header className="border-border/80 bg-card/90 sticky top-0 z-40 w-full border-b backdrop-blur-md">
@@ -39,25 +45,33 @@ export function Navbar() {
           <BrandLogo variant="horizontal" className="h-8 w-auto sm:h-9" priority />
         </Link>
 
-        <nav aria-label="Primary Navigation" className="hidden items-center gap-1 md:flex">
-          {NAV_LINKS.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-accent text-foreground"
-                    : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+        <nav aria-label="Primary Navigation" className="hidden md:block">
+          <VelocityHighlight
+            activeKey={activeDesktopHref}
+            axis="x"
+            className="flex items-center gap-1"
+            highlightClassName="rounded-lg bg-accent ring-1 ring-brand-teal/20"
+          >
+            {NAV_LINKS.map((item) => {
+              const active = item.href === activeDesktopHref;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  data-highlight-key={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "relative z-10 rounded-lg px-3.5 py-2 text-sm font-medium transition-colors",
+                    active
+                      ? "text-foreground [[data-vh-container]:not([data-hl-ready='true'])_&]:bg-accent"
+                      : "text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </VelocityHighlight>
         </nav>
 
         <div className="hidden items-center gap-2.5 md:flex">

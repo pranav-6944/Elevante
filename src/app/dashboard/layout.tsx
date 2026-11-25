@@ -1,36 +1,31 @@
 import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  FileArchive,
-  FolderKanban,
-  LayoutDashboard,
-  LogOut,
-  PlusCircle,
-  Settings,
-  Shield,
-} from "lucide-react";
+import { LogOut, Shield } from "lucide-react";
 import { signOutAction } from "@/actions/auth.actions";
 import { requireAuthOrRedirect } from "@/lib/auth/guards";
 import { isAdminPanelRole } from "@/lib/auth/rbac";
 import { getUnreadNotificationCount } from "@/lib/services/portal.service";
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { RouteVelocityNav, type RouteNavItem } from "@/components/layout/RouteVelocityNav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const PORTAL_NAV = [
-  { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Start Project", href: "/dashboard/projects/new", icon: PlusCircle },
-  { label: "My Projects", href: "/dashboard/projects", icon: FolderKanban },
-  { label: "My Files", href: "/dashboard/files", icon: FileArchive },
-  { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
-  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+const PORTAL_NAV_BASE: readonly RouteNavItem[] = [
+  { label: "Overview", href: "/dashboard", iconName: "layout-dashboard" },
+  { label: "Start Project", href: "/dashboard/projects/new", iconName: "plus-circle" },
+  { label: "My Projects", href: "/dashboard/projects", iconName: "folder-kanban" },
+  { label: "My Files", href: "/dashboard/files", iconName: "file-archive" },
+  { label: "Notifications", href: "/dashboard/notifications", iconName: "bell" },
+  { label: "Settings", href: "/dashboard/settings", iconName: "settings" },
 ];
 
 async function DashboardShell({ children }: { children: ReactNode }) {
   const profile = await requireAuthOrRedirect("/dashboard");
   const unreadCount = await getUnreadNotificationCount(profile.id);
+  const portalNav: RouteNavItem[] = PORTAL_NAV_BASE.map((item) =>
+    item.href === "/dashboard/notifications" ? { ...item, badgeCount: unreadCount } : item
+  );
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
@@ -76,28 +71,12 @@ async function DashboardShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <nav aria-label="Customer Portal Navigation" className="bg-background/70 border-t">
-          <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-6 py-2">
-            {PORTAL_NAV.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
-                >
-                  <Icon className="size-3.5" aria-hidden="true" />
-                  <span>{item.label}</span>
-                  {item.href === "/dashboard/notifications" && unreadCount > 0 ? (
-                    <Badge className="bg-brand-green ml-0.5 h-4 min-w-4 px-1 text-[10px] text-white">
-                      {unreadCount}
-                    </Badge>
-                  ) : null}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
+        <RouteVelocityNav
+          items={portalNav}
+          rootHref="/dashboard"
+          ariaLabel="Customer Portal Navigation"
+          tone="light"
+        />
       </header>
       <main id="main-content" className="mx-auto w-full max-w-6xl flex-1 px-6 py-8 sm:py-10">
         {children}

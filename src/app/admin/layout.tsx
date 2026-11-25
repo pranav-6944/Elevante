@@ -1,46 +1,30 @@
 import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
-import {
-  BarChart3,
-  Briefcase,
-  FileText,
-  FolderKanban,
-  FolderTree,
-  History,
-  Image as ImageIcon,
-  Inbox,
-  Layers,
-  LayoutDashboard,
-  LogOut,
-  Receipt,
-  Settings,
-  ShieldCheck,
-  Users,
-  UsersRound,
-} from "lucide-react";
+import { LogOut, ShieldCheck } from "lucide-react";
 import { signOutAction } from "@/actions/auth.actions";
 import { requireRoleOrRedirect } from "@/lib/auth/guards";
 import { ADMIN_PANEL_ROLES, isAdminRole } from "@/lib/auth/rbac";
 import { BrandLogo } from "@/components/common/BrandLogo";
+import { RouteVelocityNav, type RouteNavItem } from "@/components/layout/RouteVelocityNav";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const ADMIN_NAV = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard, adminOnly: false },
-  { label: "Enquiries", href: "/admin/enquiries", icon: Inbox, adminOnly: true },
-  { label: "Projects", href: "/admin/projects", icon: FolderKanban, adminOnly: false },
-  { label: "Quotations", href: "/admin/quotations", icon: Receipt, adminOnly: true },
-  { label: "Customers", href: "/admin/customers", icon: Users, adminOnly: true },
-  { label: "Categories", href: "/admin/categories", icon: FolderTree, adminOnly: true },
-  { label: "Services", href: "/admin/services", icon: Layers, adminOnly: true },
-  { label: "Portfolio", href: "/admin/portfolio", icon: Briefcase, adminOnly: true },
-  { label: "Content & FAQs", href: "/admin/content", icon: FileText, adminOnly: true },
-  { label: "Media", href: "/admin/media", icon: ImageIcon, adminOnly: true },
-  { label: "Team & Roles", href: "/admin/team", icon: UsersRound, adminOnly: true },
-  { label: "Analytics", href: "/admin/analytics", icon: BarChart3, adminOnly: false },
-  { label: "Audit Logs", href: "/admin/audit-logs", icon: History, adminOnly: true },
-  { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },
+const ADMIN_NAV: readonly (RouteNavItem & { adminOnly: boolean })[] = [
+  { label: "Overview", href: "/admin", iconName: "layout-dashboard", adminOnly: false },
+  { label: "Enquiries", href: "/admin/enquiries", iconName: "inbox", adminOnly: true },
+  { label: "Projects", href: "/admin/projects", iconName: "folder-kanban", adminOnly: false },
+  { label: "Quotations", href: "/admin/quotations", iconName: "receipt", adminOnly: true },
+  { label: "Customers", href: "/admin/customers", iconName: "users", adminOnly: true },
+  { label: "Categories", href: "/admin/categories", iconName: "folder-tree", adminOnly: true },
+  { label: "Services", href: "/admin/services", iconName: "layers", adminOnly: true },
+  { label: "Portfolio", href: "/admin/portfolio", iconName: "briefcase", adminOnly: true },
+  { label: "Content & FAQs", href: "/admin/content", iconName: "file-text", adminOnly: true },
+  { label: "Media", href: "/admin/media", iconName: "image", adminOnly: true },
+  { label: "Team & Roles", href: "/admin/team", iconName: "users-round", adminOnly: true },
+  { label: "Analytics", href: "/admin/analytics", iconName: "bar-chart-3", adminOnly: false },
+  { label: "Audit Logs", href: "/admin/audit-logs", iconName: "history", adminOnly: true },
+  { label: "Settings", href: "/admin/settings", iconName: "settings", adminOnly: true },
 ];
 
 async function AdminAuthShell({ children }: { children: ReactNode }) {
@@ -98,23 +82,12 @@ async function AdminAuthShell({ children }: { children: ReactNode }) {
             </form>
           </div>
         </div>
-        <nav aria-label="Admin Navigation" className="bg-brand-navy/95 border-t border-white/10">
-          <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-6 py-2">
-            {visibleNav.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
-                >
-                  <Icon className="size-3.5" aria-hidden="true" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
+        <RouteVelocityNav
+          items={visibleNav}
+          rootHref="/admin"
+          ariaLabel="Admin Navigation"
+          tone="dark"
+        />
       </header>
       <main id="main-content" className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
         {children}
