@@ -32,6 +32,7 @@ import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
 import { HeroVisual } from "@/components/marketing/HeroVisual";
 import { Reveal } from "@/components/marketing/MotionWrapper";
+import { ProcessWorkflowSection } from "@/components/marketing/ProcessWorkflowSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -300,33 +301,7 @@ export default async function HomePage() {
       </section>
 
       {/* 6. How ELEVANTE Works */}
-      <section className="mx-auto max-w-6xl space-y-10 px-6 py-16 sm:py-20">
-        <SectionHeader
-          eyebrow="Process"
-          title="How ELEVANTE Works"
-          description="A clear, structured engagement flow designed to eliminate ambiguity before development starts."
-          align="center"
-        />
-        <Reveal>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {WORKFLOW_STAGES.map((stage) => (
-              <Card key={stage.step} className="border-border/80 bg-card relative">
-                <CardHeader className="space-y-2">
-                  <span className="text-brand-green font-mono text-xs font-bold tracking-widest">
-                    STEP {stage.step}
-                  </span>
-                  <CardTitle className="text-lg">{stage.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {stage.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </Reveal>
-      </section>
+      <ProcessWorkflowSection stages={WORKFLOW_STAGES} />
 
       {/* 7. Why Choose ELEVANTE */}
       <section className="bg-brand-navy border-y py-16 text-white sm:py-20">
