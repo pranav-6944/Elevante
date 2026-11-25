@@ -60,11 +60,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // Tolerate browser-extension attribute injections (e.g. crxemulator) on root elements before hydration
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${outfit.variable} ${workSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="bg-background text-foreground flex min-h-full flex-col">{children}</body>
+      <body
+        suppressHydrationWarning
+        className="bg-background text-foreground flex min-h-full flex-col"
+      >
+        {children}
+      </body>
     </html>
   );
 }
