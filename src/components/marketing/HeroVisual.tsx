@@ -32,7 +32,7 @@ export function HeroVisual() {
     <div
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative mx-auto w-full max-w-[600px] rounded-3xl bg-[#0b1c26] p-1.5 shadow-2xl ring-1 ring-white/10 lg:-mr-4 lg:max-w-none lg:rounded-none lg:bg-transparent lg:p-0 lg:shadow-none lg:ring-0 xl:-mr-10"
+      className="relative mx-auto w-full max-w-[600px] lg:-mr-4 lg:max-w-none xl:-mr-10"
     >
       {/* Ambient emerald-teal bloom behind the artwork matching edge vignette hues */}
       <div
@@ -49,7 +49,7 @@ export function HeroVisual() {
           rotateY: prefersReducedMotion ? 0 : rotateY,
           transformPerspective: 1200,
         }}
-        className="relative [mask-image:radial-gradient(ellipse_93%_93%_at_50%_50%,#000_74%,transparent_100%)] will-change-transform [-webkit-mask-image:radial-gradient(ellipse_93%_93%_at_50%_50%,#000_74%,transparent_100%)]"
+        className="relative overflow-hidden rounded-3xl shadow-[0_24px_60px_rgba(8,21,29,0.45)] ring-1 ring-white/15 will-change-transform"
       >
         <Image
           src="/images/hero-studio.webp"
@@ -58,7 +58,7 @@ export function HeroVisual() {
           height={1344}
           priority
           sizes="(min-width: 1280px) 640px, (min-width: 1024px) 52vw, 100vw"
-          className="h-auto w-full object-contain drop-shadow-[0_24px_48px_rgba(8,21,29,0.45)] select-none"
+          className="h-auto w-full rounded-3xl object-contain select-none"
         />
       </motion.div>
     </div>
