@@ -15,6 +15,7 @@
   - `shadcn`: `4.23.0` (`radix-nova` preset, `radix-ui` `1.8.1`, `lucide-react` `1.79.0`)
   - `@supabase/ssr`: `0.12.7`, `@supabase/supabase-js`: `2.119.2`
   - `zod`: `4.6.7`, `server-only`: `0.0.1`
+  - Phase 2 Packages: `motion` `14.14.0`, `react-hook-form` `7.92.0`, `@hookform/resolvers` `7.0.9`, `three` `0.187.0`, `@react-three/fiber` `9.8.2`
 - **Preserved Brand Assets & Runtime Paths:**
   - `Logo.png` (`818×613`) -> `/logos/Logo.png`
   - `Horizontal-E-Logo.png` (`2110×527`) -> `/logos/Horizontal-E-Logo.png`
@@ -48,9 +49,11 @@
 
 ---
 
-## 4. Key Phase 1 Code Locations
+## 4. Key Code Locations (Phase 1 & Phase 2)
 - Env & Brand Config: `src/config/env.ts`, `src/config/site.ts`, `.env.example`
 - Supabase Clients: `src/lib/supabase/{client.ts,server.ts,admin.ts}`
 - Error & Action Envelope: `src/types/action.ts`, `src/lib/utils/errors.ts`
-- Global Boundaries & Health: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/health/route.ts`
+- Global Boundaries & Health: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/{health,contact}/route.ts`
 - Brand UI Primitives: `src/components/common/{BrandLogo.tsx,StatusIllustration.tsx,EmptyState.tsx}`
+- Public Marketing Shell & Pages: `src/app/(marketing)/`, `src/components/layout/{Navbar.tsx,Footer.tsx}`, `src/components/marketing/`
+- Content & SEO: `src/lib/content/public-defaults.ts`, `src/lib/validations/enquiry.ts`, `src/lib/seo/metadata.ts`, `src/app/{sitemap.ts,robots.ts}`

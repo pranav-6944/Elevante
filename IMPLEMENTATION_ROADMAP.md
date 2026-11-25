@@ -48,19 +48,17 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Phase 2 — Brand Identity and Public Website Shell
+## Phase 2 — Brand Identity and Public Website Shell *(Completed)*
 - **Prerequisites:** Phase 1 complete.
 - **Features & Scope:**
-  - Responsive Navbar (desktop + mobile drawer) with official responsive Elevante logo system and auth CTAs.
-  - Professional Footer with navigation, founder attribution, contact summary, and legal links.
-  - Premium Landing Page structure: Hero (strong headline, CTAs, Motion transitions, optional lazy-loaded R3F 3D brand accent with low-power/reduced-motion SVG fallback), Agency Introduction, Capabilities & Tech stack, How Elevante Works, Why Choose Elevante, Founder & Co-Founder section (Pranav Lamkhade & Omkar Sable), DB-ready placeholder slots for Services/Portfolio/Testimonials/FAQs (wired in Phases 5 & 7).
-  - Public Pages: `/about`, `/contact` (UI + Zod form; persistence wired once Phase 3 lands), `/privacy-policy`, `/terms`, plus route scaffolds for `/services`, `/portfolio`, `/faq`.
-  - Custom SVG illustrations for empty states and error pages.
-  - Foundational SEO metadata & Open Graph setup.
+  - Built sticky responsive `Navbar` (desktop navigation + Radix `Sheet` mobile drawer) with official responsive `BrandLogo` and clear CTAs.
+  - Built multi-column `Footer` with brand summary, founder attribution, capability overview, contact links, and legal links.
+  - Built Landing Page (`src/app/(marketing)/page.tsx`) covering Hero (Motion transitions + lazy-loaded `@react-three/fiber` v9 3D visual with `useSyncExternalStore` WebGL/reduced-motion detection & `HeroFallbackGraphic`), Agency Intro, 9 Capabilities, Technologies stack, 4-stage Process, Why Choose Elevante, Founders (Pranav Lamkhade & Omkar Sable), DB-ready Portfolio & Testimonials empty slots, FAQ Accordion, and CTA band.
+  - Implemented Public Pages: `/about`, `/services`, `/services/[slug]`, `/portfolio`, `/portfolio/[slug]`, `/contact` (`ContactForm` with React Hook Form + `@hookform/resolvers/zod` + honeypot + `/api/contact` server validation), `/faq`, `/privacy-policy`, `/terms`.
+  - Added foundational SEO (`src/lib/seo/metadata.ts`, `src/app/sitemap.ts`, `src/app/robots.ts`, `Organization` and `FAQPage` JSON-LD).
 - **Testing & Security Requirements:**
-  - Responsive verification across mobile (`375px`), tablet (`768px`), and desktop (`1280px+`).
-  - Accessibility check (semantic landmarks, heading hierarchy, contrast, keyboard tab order, `prefers-reduced-motion`).
-  - No broken links or non-functional buttons.
+  - `npm run format:check`, `npm test` (`4/4`), `npm run typecheck`, `npm run lint`, and `npm run build` (`16/16` routes) pass cleanly.
+  - Live `next start` verified `200` on all 12 public/SEO routes and `/api/contact` server validation (`400` bad / `503` unconfigured DB).
 
 ---
 
@@ -183,10 +181,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 2 Start)
+## Recommended Exact Next Task (Phase 3 Start)
 
-When **Phase 2 — Brand Identity and Public Website** is approved:
-1. Build responsive public header (`Navbar` with mobile drawer + `BrandLogo`), `Footer`, and landing page marketing structure in `src/app/(marketing)/` (Hero, Agency Intro, Capabilities, How It Works, Why Elevante, Founders Pranav Lamkhade & Omkar Sable, DB-ready slots for Services/Portfolio/Testimonials/FAQs).
-2. Add Motion transitions and optional lazy-loaded R3F 3D accent with `prefers-reduced-motion` and SVG fallback.
-3. Build `/about`, `/contact` UI (Zod form), `/privacy-policy`, `/terms`, and SEO metadata foundations.
+When **Phase 3 — Database and Backend Foundation** is approved:
+1. Author sequential SQL migrations in `supabase/migrations/` for all tables, enums, sequences (`ELV-...`, `QT-...`), triggers (`updated_at`, `auth.users` -> `profiles`), indexes, Storage buckets (`public-media`, `project-attachments`, `project-deliverables`), and RLS policies defined in `DATABASE_DESIGN.md`.
+2. Create minimal realistic seed (`supabase/seed.sql`) for roles, permissions, base categories, initial CMS sections, and platform settings (no fake reviews).
+3. Implement serverless-safe `rate_limits` RPC/helper, DB error normalizer, Resend notification helper, and wire `/api/contact` to persist leads into `enquiries`.
 
