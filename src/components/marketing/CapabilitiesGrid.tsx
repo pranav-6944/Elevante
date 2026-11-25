@@ -14,7 +14,7 @@ import type { CapabilityItem } from "@/lib/content/public-defaults";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const ICON_MAP: Record<CapabilityItem["iconKey"], LucideIcon> = {
+export const CAPABILITY_ICON_MAP: Record<CapabilityItem["iconKey"], LucideIcon> = {
   globe: Globe,
   box: Box,
   smartphone: Smartphone,
@@ -30,7 +30,7 @@ export function CapabilitiesGrid({ items }: { items: CapabilityItem[] }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => {
-        const Icon = ICON_MAP[item.iconKey];
+        const Icon = CAPABILITY_ICON_MAP[item.iconKey];
         return (
           <Card
             key={item.id}

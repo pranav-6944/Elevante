@@ -27,7 +27,7 @@ import {
 import { EmptyState } from "@/components/common/EmptyState";
 import { ScrambleText } from "@/components/common/ScrambleText";
 import { AboutElevanteSection } from "@/components/marketing/AboutElevanteSection";
-import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
+import { CapabilitiesCarousel } from "@/components/marketing/CapabilitiesCarousel";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
 import { HeroVisual } from "@/components/marketing/HeroVisual";
@@ -176,15 +176,20 @@ export default async function HomePage() {
       <AboutElevanteSection title={introSection?.title} subtitle={introSection?.subtitle} />
 
       {/* 3. Services & Capabilities */}
-      <section className="bg-card/45 border-y py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl space-y-10 px-6">
+      <section className="relative overflow-hidden border-y bg-gradient-to-b from-[#f3f7f5] via-[#eef5f2] to-[#f4f7f6] py-16 sm:py-20">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_35%,rgba(49,156,120,0.08),transparent_45%),radial-gradient(circle_at_78%_70%,rgba(36,91,112,0.08),transparent_48%)]"
+        />
+
+        <div className="relative mx-auto max-w-6xl space-y-10 px-4 sm:px-6">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <SectionHeader
               eyebrow="Capabilities"
               title="Comprehensive Digital Solutions"
               description="From high-converting websites and 3D experiences to Excel/CSV automation, AI systems, and executive brand collateral."
             />
-            <Button asChild variant="outline" className="shrink-0">
+            <Button asChild variant="outline" className="shrink-0 self-start sm:self-auto">
               <Link href="/services">View Service Catalog</Link>
             </Button>
           </div>
@@ -217,11 +222,11 @@ export default async function HomePage() {
               })}
             </div>
           ) : null}
-
-          <Reveal>
-            <CapabilitiesGrid items={CAPABILITIES} />
-          </Reveal>
         </div>
+
+        <Reveal className="relative mt-6 sm:mt-8">
+          <CapabilitiesCarousel items={CAPABILITIES} />
+        </Reveal>
       </section>
 
       {/* 4. Featured Portfolio Projects */}
