@@ -34,6 +34,7 @@ import { HeroVisual } from "@/components/marketing/HeroVisual";
 import { Reveal } from "@/components/marketing/MotionWrapper";
 import { ProcessWorkflowSection } from "@/components/marketing/ProcessWorkflowSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
+import { WhyChooseElevanteSection } from "@/components/marketing/WhyChooseElevanteSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -304,29 +305,7 @@ export default async function HomePage() {
       <ProcessWorkflowSection stages={WORKFLOW_STAGES} />
 
       {/* 7. Why Choose ELEVANTE */}
-      <section className="bg-brand-navy border-y py-16 text-white sm:py-20">
-        <div className="mx-auto max-w-6xl space-y-10 px-6">
-          <div className="max-w-2xl space-y-3">
-            <p className="text-brand-green text-xs font-semibold tracking-widest uppercase">
-              Why Choose ELEVANTE
-            </p>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Built with real business accountability, not disposable templates.
-            </h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {WHY_CHOOSE_ELEVANTE.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-white/15 bg-white/5 p-6 backdrop-blur-xs"
-              >
-                <h3 className="font-heading text-lg font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/80">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WhyChooseElevanteSection items={WHY_CHOOSE_ELEVANTE} />
 
       {/* 8. Founder & Co-Founder */}
       <section className="mx-auto max-w-6xl space-y-10 px-6 py-16 sm:py-20">
