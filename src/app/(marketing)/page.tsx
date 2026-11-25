@@ -367,7 +367,7 @@ export default async function HomePage() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-500/12 px-3 py-1 text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
                 <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
-                <span>Accepting Projects for {new Date().getFullYear()}</span>
+                <span>Accepting New Projects</span>
               </div>
               <h2 className="font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Ready to build something{" "}

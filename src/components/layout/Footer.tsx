@@ -42,7 +42,6 @@ function LinkedInIcon() {
 
 export function Footer() {
   const pathname = usePathname();
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="relative z-0 overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#07131e] via-[#061820] to-[#051018] pt-22 text-slate-300 sm:pt-24">
@@ -185,9 +184,7 @@ export function Footer() {
 
         {/* Bottom Copyright & Legal */}
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/10 py-6 text-xs text-slate-400 sm:flex-row sm:items-center">
-          <p>
-            &copy; {currentYear} {BRAND.legalName}. All rights reserved.
-          </p>
+          <p>&copy; 2026 {BRAND.legalName}. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5">
             <Link href="/privacy-policy" className="transition-colors hover:text-white">
               Privacy Policy

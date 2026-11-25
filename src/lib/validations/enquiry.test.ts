@@ -23,6 +23,16 @@ test("contactEnquirySchema accepts valid enquiry payload and rejects invalid inp
   });
   assert.equal(shortMsg.success, false);
 
+  const multiService = contactEnquirySchema.safeParse({
+    name: "Aarav Kulkarni",
+    email: "aarav@example.com",
+    serviceInterest: "Website Development, 3D Web Experiences, AI Solutions, Branding Systems",
+    subject: "Full platform + brand build",
+    message: "Looking to redesign our product catalog, AI workflows, and brand identity.",
+    website: "",
+  });
+  assert.equal(multiService.success, true);
+
   const botTriggered = contactEnquirySchema.safeParse({
     name: "Bot User",
     email: "bot@example.com",

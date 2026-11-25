@@ -26,7 +26,7 @@ export const contactEnquirySchema = z.object({
   serviceInterest: z
     .string()
     .trim()
-    .max(120, "Service selection is too long.")
+    .max(320, "Service selection is too long.")
     .optional()
     .or(z.literal("")),
   subject: z
