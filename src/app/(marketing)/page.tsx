@@ -3,7 +3,6 @@ import { ArrowRight, CheckCircle2, Layers3, ShieldCheck, Sparkles } from "lucide
 import { BRAND } from "@/config/site";
 import { getPublicEnv } from "@/config/env";
 import {
-  AGENCY_CONTACT,
   CAPABILITIES,
   PUBLIC_FAQS,
   TECHNOLOGY_STACK,
@@ -28,9 +27,9 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { ScrambleText } from "@/components/common/ScrambleText";
 import { AboutElevanteSection } from "@/components/marketing/AboutElevanteSection";
 import { CapabilitiesCarousel } from "@/components/marketing/CapabilitiesCarousel";
-import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
 import { HeroVisual } from "@/components/marketing/HeroVisual";
+import { HomeFaqSection } from "@/components/marketing/HomeFaqSection";
 import { Reveal } from "@/components/marketing/MotionWrapper";
 import { ProcessWorkflowSection } from "@/components/marketing/ProcessWorkflowSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -355,44 +354,37 @@ export default async function HomePage() {
       </section>
 
       {/* 10. Frequently Asked Questions */}
-      <section className="mx-auto max-w-4xl space-y-8 px-6 py-16 sm:py-20">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <SectionHeader
-            eyebrow="Answers"
-            title="Frequently Asked Questions"
-            description="Direct answers on quotations, project workflow, timelines, and file security."
-          />
-          <Button asChild variant="outline" className="shrink-0">
-            <Link href="/faq">View All FAQs</Link>
-          </Button>
-        </div>
-        <FaqAccordion items={previewFaqs} />
-      </section>
+      <HomeFaqSection items={previewFaqs} />
 
-      {/* 11. Final Contact CTA */}
-      <section className="mx-auto max-w-6xl px-6 pb-20">
-        <div className="bg-brand-gradient relative overflow-hidden rounded-3xl p-8 text-white shadow-md sm:p-12">
-          <div className="relative z-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-            <div className="max-w-2xl space-y-3">
-              <p className="text-xs font-semibold tracking-widest text-white/85 uppercase">
-                Ready to Build?
-              </p>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Tell us what you&apos;re building and receive a structured quotation.
+      {/* 11. Floating Pre-Footer Contact CTA Bridge */}
+      <section className="relative z-20 mx-auto -mt-12 -mb-12 max-w-6xl px-4 sm:-mt-14 sm:-mb-14 sm:px-6">
+        <div className="relative overflow-hidden rounded-2xl border border-emerald-400/30 bg-gradient-to-r from-[#0b192d] via-[#10253a] to-[#0a2d33] px-6 py-6 text-white shadow-[0_22px_50px_rgba(8,21,29,0.45),0_0_28px_rgba(52,211,153,0.16)] sm:px-8 sm:py-7">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-12 right-12 size-44 rounded-full bg-[radial-gradient(circle,rgba(52,211,153,0.2),transparent_68%)] blur-2xl"
+          />
+          <div className="relative z-10 flex flex-col items-start justify-between gap-5 lg:flex-row lg:items-center">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-500/12 px-3 py-1 text-[11px] font-bold tracking-wider text-emerald-300 uppercase">
+                <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                <span>Accepting Projects for {new Date().getFullYear()}</span>
+              </div>
+              <h2 className="font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Ready to build something{" "}
+                <span className="bg-gradient-to-r from-emerald-300 to-teal-200 bg-clip-text text-transparent">
+                  measurable?
+                </span>
               </h2>
-              <p className="text-sm leading-relaxed text-white/85 sm:text-base">
-                Share your goals via our enquiry form or explore our core service capabilities.
-                Responses arrive {AGENCY_CONTACT.responseSla.toLowerCase()}.
-              </p>
             </div>
-            <div className="flex flex-wrap gap-3">
+
+            <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
               <Button
                 asChild
                 size="lg"
-                className="text-brand-navy hover:bg-brand-cream bg-white font-semibold"
+                className="rounded-full bg-gradient-to-r from-[#22c58b] to-[#1e9c83] px-6 font-semibold text-white shadow-[0_8px_24px_rgba(34,197,139,0.3)] hover:opacity-95"
               >
-                <Link href="/contact" className="inline-flex items-center gap-2">
-                  <span>Request a Quote</span>
+                <Link href="/contact" className="inline-flex items-center justify-center gap-2">
+                  <span>Start a Project</span>
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
               </Button>
@@ -400,9 +392,11 @@ export default async function HomePage() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                className="rounded-full border-white/20 bg-white/[0.05] px-6 text-slate-200 hover:bg-white/10 hover:text-white"
               >
-                <Link href="/about">Learn About Us</Link>
+                <Link href="/services" className="inline-flex items-center justify-center">
+                  View Service Catalog
+                </Link>
               </Button>
             </div>
           </div>
