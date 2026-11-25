@@ -102,7 +102,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="relative rounded-2xl border border-[#c8e0da] bg-white/92 p-6 shadow-[0_20px_54px_rgba(23,38,79,0.08)] backdrop-blur-md sm:p-8">
+    <div className="relative z-20 rounded-2xl border border-[#c8e0da] bg-white/92 p-6 shadow-[0_20px_54px_rgba(23,38,79,0.08)] backdrop-blur-md sm:p-8">
       {/* Subtle corner glow inside clipped decorator */}
       <div
         aria-hidden="true"

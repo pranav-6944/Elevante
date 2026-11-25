@@ -155,7 +155,7 @@ export function ServiceAreaDropdown({
             transition={{ duration: prefersReducedMotion ? 0.08 : 0.16, ease: [0.22, 1, 0.36, 1] }}
             className="absolute top-full right-0 left-0 z-50 mt-2 overflow-hidden rounded-2xl border border-emerald-500/35 bg-white/95 shadow-[0_22px_50px_-10px_rgba(23,38,79,0.22),0_0_24px_rgba(49,156,120,0.12)] backdrop-blur-md"
           >
-            <div className="max-h-76 space-y-2.5 overflow-y-auto p-3">
+            <div className="max-h-[min(30rem,72vh)] space-y-2.5 overflow-y-auto p-3">
               {groupedItems.map((group, groupIdx) => (
                 <div
                   key={group.label}

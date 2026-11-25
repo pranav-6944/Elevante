@@ -14,7 +14,7 @@ export default function MarketingLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <Navbar />
-        <main id="main-content" className="flex-1 overflow-x-clip">
+        <main id="main-content" className="relative z-20 flex-1 overflow-x-clip">
           {children}
         </main>
         <Footer />

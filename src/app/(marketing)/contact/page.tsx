@@ -26,16 +26,12 @@ export default function ContactPage() {
   ]);
 
   return (
-    <div className="relative overflow-x-clip bg-gradient-to-b from-[#f4f8f6] via-[#ecf4f1] to-[#f4f8f6] py-14 sm:py-20">
+    <div className="relative z-20 bg-gradient-to-b from-[#f4f8f6] via-[#ecf4f1] to-[#f4f8f6] py-14 sm:py-20">
       {/* Subtle architectural blueprint aura */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(49,156,120,0.09),transparent_44%),radial-gradient(circle_at_88%_30%,rgba(36,91,112,0.08),transparent_44%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(23,38,79,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(23,38,79,0.035)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_90%_80%_at_50%_40%,#000_45%,transparent_100%)] bg-[size:48px_48px]"
-      />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(49,156,120,0.09),transparent_44%),radial-gradient(circle_at_88%_30%,rgba(36,91,112,0.08),transparent_44%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(23,38,79,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(23,38,79,0.035)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_90%_80%_at_50%_40%,#000_45%,transparent_100%)] bg-[size:48px_48px]" />
+      </div>
 
       <div className="relative mx-auto max-w-6xl space-y-10 px-4 sm:px-6">
         <script

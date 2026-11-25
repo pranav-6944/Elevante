@@ -39,4 +39,3 @@ export function CopyEmailButton({ email }: { email: string }) {
     </button>
   );
 }
-
