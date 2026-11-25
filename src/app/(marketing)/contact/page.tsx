@@ -1,6 +1,7 @@
 import { Clock, Mail, MapPin, ShieldCheck } from "lucide-react";
+import { getPublicEnv } from "@/config/env";
 import { AGENCY_CONTACT } from "@/lib/content/public-defaults";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,8 +14,28 @@ export const metadata = buildMetadata({
 });
 
 export default function ContactPage() {
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
+  const contactJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact ELEVANTE",
+    url: new URL("/contact", NEXT_PUBLIC_SITE_URL).toString(),
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "Contact", path: "/contact" },
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-12 px-6 py-14 sm:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(contactJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
       <SectionHeader
         eyebrow="Contact ELEVANTE"
         title="Start a Conversation About Your Project"

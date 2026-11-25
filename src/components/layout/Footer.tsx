@@ -39,9 +39,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">
+            <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
               Explore
-            </h3>
+            </h2>
             <ul className="space-y-2 text-sm">
               {FOOTER_NAVIGATION.map((item) => (
                 <li key={item.href}>
@@ -57,9 +57,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">
+            <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
               Capabilities
-            </h3>
+            </h2>
             <ul className="text-muted-foreground space-y-2 text-sm">
               {FOOTER_CAPABILITIES.map((cap) => (
                 <li key={cap}>{cap}</li>
@@ -68,9 +68,9 @@ export function Footer() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">
+            <h2 className="text-foreground text-sm font-semibold tracking-wide uppercase">
               Get in Touch
-            </h3>
+            </h2>
             <div className="text-muted-foreground space-y-2.5 text-sm">
               <a
                 href={`mailto:${AGENCY_CONTACT.email}`}

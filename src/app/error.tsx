@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { logStructuredError } from "@/lib/observability/error-monitor";
 import { Button } from "@/components/ui/button";
 import { StatusIllustration } from "@/components/common/StatusIllustration";
 
@@ -12,8 +13,8 @@ export default function ErrorPage({ error, retry }: { error: unknown; retry: () 
       : "";
 
   useEffect(() => {
-    console.error("ELEVANTE segment error:", error);
-  }, [error]);
+    logStructuredError("app.segment_boundary", error, { ...(digest ? { digest } : {}) });
+  }, [error, digest]);
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">

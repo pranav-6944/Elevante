@@ -54,6 +54,12 @@ async function AdminAuthShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
+      <a
+        href="#main-content"
+        className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
+      >
+        Skip to main content
+      </a>
       <header className="bg-brand-navy sticky top-0 z-40 border-b text-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
           <div className="flex items-center gap-4">
@@ -110,7 +116,9 @@ async function AdminAuthShell({ children }: { children: ReactNode }) {
           </div>
         </nav>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">{children}</main>
+      <main id="main-content" className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">
+        {children}
+      </main>
     </div>
   );
 }

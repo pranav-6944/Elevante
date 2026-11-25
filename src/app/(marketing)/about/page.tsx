@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Target, Shield, Cpu } from "lucide-react";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { BRAND } from "@/config/site";
+import { getPublicEnv } from "@/config/env";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Button } from "@/components/ui/button";
@@ -35,8 +37,34 @@ const PRINCIPLES = [
 ];
 
 export default function AboutPage() {
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
+  const aboutJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: `About ${BRAND.name}`,
+    url: new URL("/about", NEXT_PUBLIC_SITE_URL).toString(),
+    mainEntity: BRAND.founders.map((founder) => ({
+      "@type": "Person",
+      name: founder.name,
+      jobTitle: founder.role,
+      worksFor: { "@type": "Organization", name: BRAND.name },
+    })),
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-16 px-6 py-14 sm:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(aboutJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
       <section className="space-y-6">
         <SectionHeader
           eyebrow="About ELEVANTE"

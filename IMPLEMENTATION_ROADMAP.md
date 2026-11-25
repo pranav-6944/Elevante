@@ -177,10 +177,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 9 Start)
+## Recommended Exact Next Task (Phase 10 Start)
 
-When **Phase 9 — SEO, Optimization, Accessibility & Security Review** is approved:
-1. Perform comprehensive SEO, AEO, and GEO validation (`robots.txt`, `sitemap.xml`, metadata uniqueness, and full Schema.org JSON-LD graph across public pages).
-2. Execute Next.js / React performance & accessibility review (Core Web Vitals checks, semantic HTML, keyboard focus, contrast, reduced motion, dynamic Three.js chunking, bundle analysis).
-3. Run full `security-audit` verification across HTTP security headers (`next.config.ts` CSP/HSTS/XFO/XCTO), RLS & permission boundaries, rate-limit hardening, and error monitoring readiness.
+When **Phase 10 — Testing, Deployment & Go-Live Readiness** is approved:
+1. Run comprehensive unit, integration, and end-to-end verification tests across public, auth, portal, admin, and workflow layers.
+2. Perform final clean production build (`next build`), environment audit (`.env.example`), security verification, and deployment preparation (Vercel + Supabase + Resend).
+3. Deliver the complete Production Readiness Checklist and present the required external go-live credentials/details checklist to move ELEVANTE into production.
 

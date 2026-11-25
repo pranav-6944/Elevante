@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { getPublicEnv } from "@/config/env";
 import { PUBLIC_FAQS, type FaqEntry } from "@/lib/content/public-defaults";
-import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { getPublishedFaqs } from "@/lib/services/catalog.service";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -14,6 +15,7 @@ export const metadata = buildMetadata({
 });
 
 export default async function FaqPage() {
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
   const dbFaqs = await getPublishedFaqs();
   const displayFaqs: FaqEntry[] =
     dbFaqs.length > 0
@@ -37,12 +39,20 @@ export default async function FaqPage() {
       },
     })),
   };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "FAQ", path: "/faq" },
+  ]);
 
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-6 py-14 sm:py-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
 
       <SectionHeader

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import { isSupabaseConfigured } from "@/config/env";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { getPublicEnv, isSupabaseConfigured } from "@/config/env";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { getPublishedPortfolioProjects } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
@@ -104,8 +104,28 @@ async function PortfolioCatalogBody() {
 }
 
 export default function PortfolioPage() {
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "ELEVANTE Portfolio",
+    url: new URL("/portfolio", NEXT_PUBLIC_SITE_URL).toString(),
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "Portfolio", path: "/portfolio" },
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-12 px-6 py-14 sm:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
       <SectionHeader
         eyebrow="Selected Work"
         title="Portfolio & Case Studies"

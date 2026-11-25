@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, ExternalLink } from "lucide-react";
 import { getPublicEnv, isSupabaseConfigured } from "@/config/env";
-import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { getPublishedPortfolioBySlug } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Badge } from "@/components/ui/badge";
@@ -83,11 +83,21 @@ async function PortfolioDetailBody({ params }: { params: Promise<{ slug: string 
     },
   };
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "Portfolio", path: "/portfolio" },
+    { name: detail.title, path: `/portfolio/${detail.slug}` },
+  ]);
+
   return (
     <div className="mx-auto max-w-5xl space-y-10 px-6 py-14 sm:py-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
 
       <div className="space-y-4">

@@ -1,10 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+import { logStructuredError } from "@/lib/observability/error-monitor";
+
 export default function GlobalError({ error, retry }: { error: unknown; retry: () => void }) {
   const digest =
     typeof error === "object" && error !== null && "digest" in error
       ? String((error as { digest?: unknown }).digest ?? "")
       : "";
+
+  useEffect(() => {
+    logStructuredError("app.global_boundary", error, { ...(digest ? { digest } : {}) });
+  }, [error, digest]);
 
   return (
     <html lang="en">

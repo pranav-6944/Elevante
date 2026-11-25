@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Clock } from "lucide-react";
 import { getPublicEnv, isSupabaseConfigured } from "@/config/env";
-import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { formatMoneyMinor, getPublishedServiceBySlug } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
@@ -89,11 +89,21 @@ async function ServiceDetailBody({ params }: { params: Promise<{ slug: string }>
     },
   };
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: detail.title, path: `/services/${detail.slug}` },
+  ]);
+
   return (
     <div className="mx-auto max-w-5xl space-y-12 px-6 py-14 sm:py-20">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(serviceJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
 
       <div className="space-y-5">

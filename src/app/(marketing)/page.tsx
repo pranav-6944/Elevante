@@ -10,7 +10,12 @@ import {
   WHY_CHOOSE_ELEVANTE,
   WORKFLOW_STAGES,
 } from "@/lib/content/public-defaults";
-import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
+import {
+  buildMetadata,
+  buildOrganizationJsonLd,
+  buildWebSiteJsonLd,
+  serializeJsonLd,
+} from "@/lib/seo/metadata";
 import {
   formatMoneyMinor,
   getPublishedFaqs,
@@ -73,25 +78,18 @@ export default async function HomePage() {
         }))
       : PUBLIC_FAQS.slice(0, 4);
 
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: BRAND.name,
-    url: NEXT_PUBLIC_SITE_URL,
-    description: BRAND.description,
-    email: AGENCY_CONTACT.email,
-    founders: BRAND.founders.map((founder) => ({
-      "@type": "Person",
-      name: founder.name,
-      jobTitle: founder.role,
-    })),
-  };
+  const organizationSchema = buildOrganizationJsonLd(NEXT_PUBLIC_SITE_URL);
+  const webSiteSchema = buildWebSiteJsonLd(NEXT_PUBLIC_SITE_URL);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(webSiteSchema) }}
       />
 
       {/* 1. Hero Section */}

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getPublicEnv } from "@/config/env";
 import { CAPABILITIES } from "@/lib/content/public-defaults";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import { getPublishedCategories, getPublishedServices } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
@@ -17,13 +18,33 @@ export const metadata = buildMetadata({
 });
 
 export default async function ServicesPage() {
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
   const [categories, services] = await Promise.all([
     getPublishedCategories(),
     getPublishedServices(),
   ]);
 
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "ELEVANTE Services",
+    url: new URL("/services", NEXT_PUBLIC_SITE_URL).toString(),
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd(NEXT_PUBLIC_SITE_URL, [
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-14 px-6 py-14 sm:py-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
+      />
       <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
         <SectionHeader
           eyebrow="Service Catalog"
