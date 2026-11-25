@@ -14,8 +14,10 @@ import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
 import {
   formatMoneyMinor,
   getPublishedFaqs,
+  getPublishedPortfolioProjects,
   getPublishedServices,
   getPublishedSiteSection,
+  getPublishedTestimonials,
 } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
@@ -36,16 +38,30 @@ export const metadata = buildMetadata({
 
 export default async function HomePage() {
   const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
-  const [heroSection, introSection, publishedServices, publishedFaqs] = await Promise.all([
+  const [
+    heroSection,
+    introSection,
+    publishedServices,
+    publishedPortfolio,
+    publishedTestimonials,
+    publishedFaqs,
+  ] = await Promise.all([
     getPublishedSiteSection("home", "hero"),
     getPublishedSiteSection("home", "intro"),
     getPublishedServices(),
+    getPublishedPortfolioProjects(),
+    getPublishedTestimonials(),
     getPublishedFaqs(),
   ]);
 
   const featuredServices = publishedServices.filter((s) => s.isFeatured).slice(0, 3);
   const previewServices =
     featuredServices.length > 0 ? featuredServices : publishedServices.slice(0, 3);
+
+  const featuredPortfolio = publishedPortfolio.filter((p) => p.isFeatured).slice(0, 3);
+  const previewPortfolio =
+    featuredPortfolio.length > 0 ? featuredPortfolio : publishedPortfolio.slice(0, 3);
+  const previewTestimonials = publishedTestimonials.slice(0, 3);
 
   const previewFaqs =
     publishedFaqs.length > 0
@@ -231,27 +247,53 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 4. Featured Portfolio Projects (DB-Ready Slot until Phase 7) */}
+      {/* 4. Featured Portfolio Projects */}
       <section className="mx-auto max-w-6xl space-y-8 px-6 py-16 sm:py-20">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeader
             eyebrow="Portfolio"
             title="Featured Work & Case Studies"
-            description="Verified project case studies are managed dynamically through the ELEVANTE Admin CMS."
+            description="Verified project case studies managed dynamically through the ELEVANTE Admin CMS."
           />
           <Button asChild variant="outline" className="shrink-0">
             <Link href="/portfolio">Open Portfolio</Link>
           </Button>
         </div>
-        <EmptyState
-          title="Portfolio Case Studies Connect in Phase 7"
-          description="ELEVANTE never publishes fabricated demo projects. Live case studies, outcomes, and interactive previews will render directly from the database once Portfolio Management is active."
-          action={
-            <Button asChild className="bg-brand-gradient text-white hover:opacity-95">
-              <Link href="/contact">Request Relevant Work Samples</Link>
-            </Button>
-          }
-        />
+        {previewPortfolio.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-3">
+            {previewPortfolio.map((item) => (
+              <Card key={item.id} className="bg-card flex flex-col justify-between">
+                <CardHeader className="space-y-2">
+                  {item.industry ? (
+                    <Badge variant="outline" className="text-secondary w-fit text-[11px]">
+                      {item.industry}
+                    </Badge>
+                  ) : null}
+                  <CardTitle className="text-xl">{item.title}</CardTitle>
+                  <CardDescription>{item.summary}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between border-t pt-4">
+                  <span className="text-muted-foreground text-xs">
+                    {item.techStack.slice(0, 2).join(" · ") || "Case Study"}
+                  </span>
+                  <Button asChild size="sm" variant="ghost">
+                    <Link href={`/portfolio/${item.slug}`}>Read Case Study</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title="Published Case Studies Render Here Automatically"
+            description="ELEVANTE never publishes fabricated demo projects. Live case studies and measurable outcomes appear here directly from your Admin Portfolio CMS."
+            action={
+              <Button asChild className="bg-brand-gradient text-white hover:opacity-95">
+                <Link href="/contact">Request Relevant Work Samples</Link>
+              </Button>
+            }
+          />
+        )}
       </section>
 
       {/* 5. Technologies & Stack */}
@@ -341,18 +383,38 @@ export default async function HomePage() {
         </Reveal>
       </section>
 
-      {/* 9. Testimonials (DB-Ready Slot until Phase 7) */}
+      {/* 9. Testimonials */}
       <section className="bg-card/45 border-y py-16">
         <div className="mx-auto max-w-6xl space-y-8 px-6">
           <SectionHeader
             eyebrow="Client Trust"
             title="Client Testimonials"
-            description="Authentic client feedback is curated and published solely from verified project records."
+            description="Authentic client feedback curated and published strictly from verified project records."
           />
-          <EmptyState
-            title="Verified Client Reviews Connect in Phase 7"
-            description="In compliance with ELEVANTE's accuracy policy, no synthetic or placeholder reviews are shown. Published client testimonials will appear here once CMS records are added."
-          />
+          {previewTestimonials.length > 0 ? (
+            <div className="grid gap-5 md:grid-cols-3">
+              {previewTestimonials.map((t) => (
+                <Card key={t.id} className="bg-card">
+                  <CardContent className="space-y-3 pt-6">
+                    <p className="text-foreground text-sm leading-relaxed italic">
+                      &ldquo;{t.quote}&rdquo;
+                    </p>
+                    <div className="border-t pt-3 text-xs">
+                      <p className="text-foreground font-semibold">{t.author_name}</p>
+                      <p className="text-muted-foreground">
+                        {[t.author_role, t.company].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="Verified Client Reviews Connect Automatically"
+              description="In compliance with ELEVANTE's accuracy policy, no synthetic or placeholder reviews are shown. Published client testimonials appear here once saved in Admin CMS."
+            />
+          )}
         </div>
       </section>
 

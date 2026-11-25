@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getPublicEnv } from "@/config/env";
-import { getPublishedServices } from "@/lib/services/catalog.service";
+import {
+  getPublishedPortfolioProjects,
+  getPublishedServices,
+} from "@/lib/services/catalog.service";
 
 const STATIC_PUBLIC_ROUTES = [
   { path: "/", changeFrequency: "weekly" as const, priority: 1.0 },
@@ -15,7 +18,10 @@ const STATIC_PUBLIC_ROUTES = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
-  const services = await getPublishedServices();
+  const [services, portfolio] = await Promise.all([
+    getPublishedServices(),
+    getPublishedPortfolioProjects(),
+  ]);
 
   const staticEntries: MetadataRoute.Sitemap = STATIC_PUBLIC_ROUTES.map((route) => ({
     url: new URL(route.path, NEXT_PUBLIC_SITE_URL).toString(),
@@ -29,5 +35,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  return [...staticEntries, ...serviceEntries];
+  const portfolioEntries: MetadataRoute.Sitemap = portfolio.map((item) => ({
+    url: new URL(`/portfolio/${item.slug}`, NEXT_PUBLIC_SITE_URL).toString(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...staticEntries, ...serviceEntries, ...portfolioEntries];
 }

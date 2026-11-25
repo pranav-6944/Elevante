@@ -4,13 +4,35 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 6 — Customer Portal` (**Completed**)
-- **Next Recommended Phase:** `Phase 7 — Admin Dashboard` *(awaiting explicit user approval)*
-- **Next Recommended Action:** Build Admin Overview live operational metrics, Customer & Enquiry triage, Project & Quotation management, Portfolio/Testimonials CMS + public portfolio wiring, Team/Role permissions, Audit Logs, and Platform Settings.
+- **Current Phase:** `Phase 7 — Admin Dashboard` (**Completed**)
+- **Next Recommended Phase:** `Phase 8 — End-to-End Project & Quotation Workflow` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Complete the interactive 14-step customer/admin workflow: quotation acceptance/revision/decline actions, two-way project messaging (`is_internal_note` protection), deliverables upload (`project-deliverables`) with release toggles and download counting, and completion status lock.
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 7: Admin Dashboard
+- **Completed Work:**
+  - Built Phase 7 validation schemas, pure server-side line-item quotation total calculator (`calculateQuotationTotals`), and privilege-escalation / self-lockout RBAC guards (`canActorManageRoleChange`, `canActorToggleProfileStatus`) in `src/lib/validations/admin.ts` with unit tests (`src/lib/validations/admin.test.ts`).
+  - Built admin operational queries (`src/lib/services/admin.service.ts`) and cached public/admin portfolio & testimonial readers (`src/lib/services/catalog.service.ts`).
+  - Built RBAC-enforced, audit-logged Server Actions (`src/actions/admin-ops.actions.ts`, `src/actions/portfolio.actions.ts`, `src/actions/admin-gov.actions.ts`) respecting Postgres RLS rules (`staff` assigned-project scoping, `super_admin` gate for `platform_settings` & `role_id` mutations, server-recomputed quotation totals).
+  - Built Admin workspaces and updated navigation (`src/app/admin/layout.tsx`, `/admin`, `/admin/customers`, `/admin/enquiries`, `/admin/projects`, `/admin/projects/[id]`, `/admin/quotations`, `/admin/portfolio`, `/admin/team`, `/admin/analytics`, `/admin/audit-logs`, `/admin/settings`).
+  - Wired public `/portfolio`, `/portfolio/[slug]`, landing page featured work & testimonials (`src/app/(marketing)/page.tsx`), and `src/app/sitemap.ts` directly to live cached DB records with zero fabricated content when empty.
+- **Files Created / Modified:**
+  - Validation & Queries: `src/lib/validations/{admin.ts,admin.test.ts}`, `src/lib/services/{admin.service.ts,catalog.service.ts}`
+  - Actions: `src/actions/{admin-ops.actions.ts,portfolio.actions.ts,admin-gov.actions.ts}`
+  - Admin UI & Routes: `src/components/admin/{CustomersManager,EnquiriesManager,AdminProjectsManager,AdminProjectControls,QuotationsManager,PortfolioManagerClient,TeamManagerClient,AuditLogsViewer,SettingsManagerClient}.tsx`, `src/app/admin/{layout.tsx,page.tsx,customers/page.tsx,enquiries/page.tsx,projects/page.tsx,projects/[id]/page.tsx,quotations/page.tsx,portfolio/page.tsx,team/page.tsx,analytics/page.tsx,audit-logs/page.tsx,settings/page.tsx}`
+  - Public Wiring & Docs: `src/app/(marketing)/{page.tsx,portfolio/page.tsx,portfolio/[slug]/page.tsx}`, `src/app/sitemap.ts`, `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check`, `npm test` (`21/21` tests), `npm run typecheck`, `npm run lint` (0 errors, 0 warnings), and `npm run build` (`49/49` routes expected; verified on next build) passed cleanly.
+  - Live `next start` verified `200` on `/portfolio` & `/portfolio/sample-slug`, `307` login redirects across all new `/admin/*` routes, and `0` static bundle secret leaks.
+- **Unresolved / Deferred Setup:**
+  - Live PostgreSQL CRUD tests (enquiries triage, quotation dispatch, portfolio publish tag revalidation, role escalation prevention trigger, and settings persistence) await `.env.local` Supabase credentials and database migrations.
+- **Pending Tasks:**
+  - Await explicit user approval for **Phase 8 — End-to-End Project & Quotation Workflow**.
+
+---
 
 ### 2026-11-25 — Phase 6: Customer Portal
 - **Completed Work:**

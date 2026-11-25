@@ -1,28 +1,46 @@
 import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
 import {
+  BarChart3,
+  Briefcase,
   FileText,
+  FolderKanban,
   FolderTree,
+  History,
   Image as ImageIcon,
-  LayoutDashboard,
+  Inbox,
   Layers,
+  LayoutDashboard,
   LogOut,
+  Receipt,
+  Settings,
   ShieldCheck,
+  Users,
+  UsersRound,
 } from "lucide-react";
 import { signOutAction } from "@/actions/auth.actions";
 import { requireRoleOrRedirect } from "@/lib/auth/guards";
-import { ADMIN_PANEL_ROLES } from "@/lib/auth/rbac";
+import { ADMIN_PANEL_ROLES, isAdminRole } from "@/lib/auth/rbac";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const ADMIN_NAV = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard },
-  { label: "Categories", href: "/admin/categories", icon: FolderTree },
-  { label: "Services", href: "/admin/services", icon: Layers },
-  { label: "Content & FAQs", href: "/admin/content", icon: FileText },
-  { label: "Media", href: "/admin/media", icon: ImageIcon },
+  { label: "Overview", href: "/admin", icon: LayoutDashboard, adminOnly: false },
+  { label: "Enquiries", href: "/admin/enquiries", icon: Inbox, adminOnly: true },
+  { label: "Projects", href: "/admin/projects", icon: FolderKanban, adminOnly: false },
+  { label: "Quotations", href: "/admin/quotations", icon: Receipt, adminOnly: true },
+  { label: "Customers", href: "/admin/customers", icon: Users, adminOnly: true },
+  { label: "Categories", href: "/admin/categories", icon: FolderTree, adminOnly: true },
+  { label: "Services", href: "/admin/services", icon: Layers, adminOnly: true },
+  { label: "Portfolio", href: "/admin/portfolio", icon: Briefcase, adminOnly: true },
+  { label: "Content & FAQs", href: "/admin/content", icon: FileText, adminOnly: true },
+  { label: "Media", href: "/admin/media", icon: ImageIcon, adminOnly: true },
+  { label: "Team & Roles", href: "/admin/team", icon: UsersRound, adminOnly: true },
+  { label: "Analytics", href: "/admin/analytics", icon: BarChart3, adminOnly: false },
+  { label: "Audit Logs", href: "/admin/audit-logs", icon: History, adminOnly: true },
+  { label: "Settings", href: "/admin/settings", icon: Settings, adminOnly: true },
 ];
 
 async function AdminAuthShell({ children }: { children: ReactNode }) {
@@ -30,6 +48,9 @@ async function AdminAuthShell({ children }: { children: ReactNode }) {
     nextPath: "/admin",
     unauthorizedRedirect: "/dashboard",
   });
+
+  const fullAdmin = isAdminRole(profile.role);
+  const visibleNav = ADMIN_NAV.filter((item) => !item.adminOnly || fullAdmin);
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
@@ -73,7 +94,7 @@ async function AdminAuthShell({ children }: { children: ReactNode }) {
         </div>
         <nav aria-label="Admin Navigation" className="bg-brand-navy/95 border-t border-white/10">
           <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-6 py-2">
-            {ADMIN_NAV.map((item) => {
+            {visibleNav.map((item) => {
               const Icon = item.icon;
               return (
                 <Link

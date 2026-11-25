@@ -1,6 +1,6 @@
 # ELEVANTE — Project Context
 
-> **Current Status:** Phase 6 (Customer Portal) complete — awaiting explicit approval before Phase 7 implementation.  
+> **Current Status:** Phase 7 (Admin Dashboard) complete — awaiting explicit approval before Phase 8 implementation.  
 > **Primary Source of Truth:** [ProjectBrief.md](./ProjectBrief.md)
 
 ---
@@ -124,7 +124,7 @@ Where `ProjectBrief.md` left implementation details unspecified, the following p
 
 ## 8. Current Implementation Status
 
-- **Active Phase:** Phase 6 — Customer Portal (**Completed**)
-- **Application Code:** Full Customer Portal shell (`src/app/dashboard/layout.tsx`) with unread notification badge, overview (`/dashboard`), Start a Project (`/dashboard/projects/new`) integrating `<DynamicServiceForm />` + private `project-attachments` upload, My Projects (`/dashboard/projects`), Project Details (`/dashboard/projects/[id]`) displaying immutable brief snapshots (`project_form_responses` + `form_schema_snapshot`), status timeline, files, non-draft quotations, non-internal messages, and deliverables, My Files (`/dashboard/files`), Notifications (`/dashboard/notifications`), plus authenticated project submission/upload/signed-download routes (`/api/projects`, `/api/projects/[id]/files`, `/api/projects/files/[fileId]/download`).
-- **Next Recommended Phase:** Phase 7 — Admin Dashboard (awaiting explicit approval)
+- **Active Phase:** Phase 7 — Admin Dashboard (**Completed**)
+- **Application Code:** Complete Admin operations suite under `/admin` (`Overview`, `Customers`, `Enquiries`, `Projects` + `[id]` detail controls, `Quotations` with server-computed line-item totals, `Portfolio` + `Testimonials` CMS, `Team & RBAC` with Super Admin role/matrix controls, `Analytics`, `Audit Logs`, and `Platform Settings`), alongside live cached public `/portfolio`, `/portfolio/[slug]`, homepage Featured Work & Testimonials, and `/sitemap.xml` wiring.
+- **Next Recommended Phase:** Phase 8 — End-to-End Project & Quotation Workflow (awaiting explicit approval)
 

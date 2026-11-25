@@ -177,10 +177,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 7 Start)
+## Recommended Exact Next Task (Phase 8 Start)
 
-When **Phase 7 — Admin Dashboard** is approved:
-1. Build Admin Overview (`/admin`) live operational metrics (open enquiries, active projects, pending quotes, audit events) and Enquiry triage (`/admin/enquiries`) + Customer directory (`/admin/customers`).
-2. Build Admin Project Management (`/admin/projects`), Line-Item Quotation Builder (`/admin/quotations`), and Portfolio & Testimonial Management (`/admin/portfolio`) wiring public `/portfolio`, `/portfolio/[slug]`, and landing work/testimonials to live DB records.
-3. Build Admin Team & Role Permissions (`/admin/team`), Audit Logs (`/admin/audit-logs`), Analytics (`/admin/analytics`), and Platform Settings (`/admin/settings`).
+When **Phase 8 — End-to-End Project & Quotation Workflow** is approved:
+1. Build customer interactive quotation review actions (`accept`, `request_revision`, `decline` with note & state machine validation) and automated status transitions (`quote_accepted` -> `in_progress` -> `review_ready` -> `revision_requested` -> `completed`).
+2. Build two-way Customer <-> Admin/Staff project messaging (`project_messages` keeping `is_internal_note = true` strictly admin/staff-only) with email + notification triggers.
+3. Build Admin Deliverables upload (`project-deliverables` bucket), `is_customer_accessible` release toggle, and download tracking (`download_count`) alongside a full 14-step integration test.
 

@@ -17,6 +17,31 @@ export type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
 export type FaqRow = Database["public"]["Tables"]["faqs"]["Row"];
 export type SiteSectionRow = Database["public"]["Tables"]["site_sections"]["Row"];
 export type MediaAssetRow = Database["public"]["Tables"]["media_assets"]["Row"];
+export type PortfolioProjectRow = Database["public"]["Tables"]["portfolio_projects"]["Row"];
+export type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
+
+export interface PublicPortfolioCard {
+  id: string;
+  title: string;
+  slug: string;
+  clientName: string | null;
+  industry: string | null;
+  summary: string;
+  outcomes: string[];
+  techStack: string[];
+  liveUrl: string | null;
+  coverImageUrl: string | null;
+  coverImageAlt: string | null;
+  isFeatured: boolean;
+}
+
+export interface PublicPortfolioDetail extends PublicPortfolioCard {
+  challenge: string | null;
+  solution: string | null;
+  serviceId: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
+}
 
 export interface PublicServiceCard {
   id: string;
@@ -336,5 +361,130 @@ export async function getAdminMediaAssets(): Promise<MediaAssetRow[]> {
     .from("media_assets")
     .select("*")
     .order("created_at", { ascending: false });
+  return data ?? [];
+}
+
+export async function getPublishedPortfolioProjects(): Promise<PublicPortfolioCard[]> {
+  "use cache";
+  cacheTag("portfolio", "cms");
+  cacheLife("minutes");
+
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createPublicDataClient();
+  const [{ data: rows }, { data: media }] = await Promise.all([
+    supabase
+      .from("portfolio_projects")
+      .select("*")
+      .eq("is_published", true)
+      .is("deleted_at", null)
+      .order("display_order", { ascending: true }),
+    supabase.from("media_assets").select("id, public_url, alt_text"),
+  ]);
+
+  if (!rows) return [];
+  const mediaMap = new Map((media ?? []).map((m) => [m.id, m]));
+
+  return rows.map((row) => {
+    const cover = row.cover_media_id ? mediaMap.get(row.cover_media_id) : undefined;
+    return {
+      id: row.id,
+      title: row.title,
+      slug: row.slug,
+      clientName: row.client_name,
+      industry: row.industry,
+      summary: row.summary,
+      outcomes: toStringArray(row.outcomes),
+      techStack: row.tech_stack,
+      liveUrl: row.live_url,
+      coverImageUrl: cover?.public_url ?? null,
+      coverImageAlt: cover?.alt_text ?? row.title,
+      isFeatured: row.is_featured,
+    };
+  });
+}
+
+export async function getPublishedPortfolioBySlug(
+  slug: string
+): Promise<PublicPortfolioDetail | null> {
+  "use cache";
+  cacheTag("portfolio", "cms");
+  cacheLife("minutes");
+
+  if (!isSupabaseConfigured()) return null;
+
+  const supabase = createPublicDataClient();
+  const { data: row } = await supabase
+    .from("portfolio_projects")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .is("deleted_at", null)
+    .maybeSingle();
+
+  if (!row) return null;
+
+  const { data: cover } = row.cover_media_id
+    ? await supabase
+        .from("media_assets")
+        .select("public_url, alt_text")
+        .eq("id", row.cover_media_id)
+        .maybeSingle()
+    : { data: null };
+
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    clientName: row.client_name,
+    industry: row.industry,
+    summary: row.summary,
+    challenge: row.challenge,
+    solution: row.solution,
+    serviceId: row.service_id,
+    outcomes: toStringArray(row.outcomes),
+    techStack: row.tech_stack,
+    liveUrl: row.live_url,
+    coverImageUrl: cover?.public_url ?? null,
+    coverImageAlt: cover?.alt_text ?? row.title,
+    isFeatured: row.is_featured,
+    seoTitle: row.seo_title,
+    seoDescription: row.seo_description,
+  };
+}
+
+export async function getPublishedTestimonials(): Promise<TestimonialRow[]> {
+  "use cache";
+  cacheTag("testimonials");
+  cacheLife("minutes");
+
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = createPublicDataClient();
+  const { data } = await supabase
+    .from("testimonials")
+    .select("*")
+    .eq("is_published", true)
+    .order("display_order", { ascending: true });
+
+  return data ?? [];
+}
+
+export async function getAdminPortfolioProjects(): Promise<PortfolioProjectRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("portfolio_projects")
+    .select("*")
+    .is("deleted_at", null)
+    .order("display_order", { ascending: true });
+  return data ?? [];
+}
+
+export async function getAdminTestimonials(): Promise<TestimonialRow[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("testimonials")
+    .select("*")
+    .order("display_order", { ascending: true });
   return data ?? [];
 }
