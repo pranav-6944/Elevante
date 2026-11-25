@@ -7,6 +7,7 @@ import type { CategoryRow, PublicServiceCard } from "@/lib/services/catalog.serv
 import { formatMoneyMinor } from "@/lib/utils/format";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ScrambleText } from "@/components/common/ScrambleText";
 import { VelocityHighlight } from "@/components/common/VelocityHighlight";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,18 @@ export function ServiceCatalogExplorer({
             aria-label="Search services"
           />
         </div>
+      </div>
+
+      <div className="text-muted-foreground flex items-center justify-between text-xs font-medium">
+        <ScrambleText
+          text={`Showing ${filtered.length} ${filtered.length === 1 ? "capability" : "capabilities"} in ${
+            selectedCategory === "all"
+              ? "All Services"
+              : (categories.find((c) => c.slug === selectedCategory)?.name ?? selectedCategory)
+          }`}
+          trigger="change"
+          durationMs={360}
+        />
       </div>
 
       {filtered.length === 0 ? (

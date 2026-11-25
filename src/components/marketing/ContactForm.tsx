@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react";
 import { AGENCY_CONTACT, CAPABILITIES } from "@/lib/content/public-defaults";
 import { contactEnquirySchema, type ContactEnquiryInput } from "@/lib/validations/enquiry";
+import { ScrambleText } from "@/components/common/ScrambleText";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -126,7 +127,9 @@ export function ContactForm() {
               ) : (
                 <AlertCircle className="size-4" />
               )}
-              <AlertTitle>{serverFeedback.title}</AlertTitle>
+              <AlertTitle>
+                <ScrambleText text={serverFeedback.title} trigger="mount" durationMs={400} />
+              </AlertTitle>
               <AlertDescription className="space-y-2">
                 <p>{serverFeedback.message}</p>
                 {serverFeedback.type === "notice" ? (

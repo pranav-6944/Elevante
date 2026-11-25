@@ -25,6 +25,7 @@ import {
   getPublishedTestimonials,
 } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
+import { ScrambleText } from "@/components/common/ScrambleText";
 import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
@@ -98,7 +99,12 @@ export default async function HomePage() {
           <div className="space-y-6">
             <div className="bg-card text-secondary inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-xs">
               <Sparkles className="text-brand-green size-3.5" aria-hidden="true" />
-              <span>Digital Engineering, AI, Analytics &amp; Brand Design</span>
+              <ScrambleText
+                text="Digital Engineering, AI, Analytics & Brand Design"
+                trigger="mount"
+                durationMs={560}
+                replayOnHover
+              />
             </div>
 
             <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
