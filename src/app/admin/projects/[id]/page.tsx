@@ -8,8 +8,10 @@ import { ADMIN_PANEL_ROLES, isAdminRole } from "@/lib/auth/rbac";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getAdminProjectDetail } from "@/lib/services/admin.service";
 import { formatFileSize, formatMoneyMinor, formatShortDate } from "@/lib/utils/format";
+import { AdminDeliverablesManager } from "@/components/admin/AdminDeliverablesManager";
 import { AdminProjectControls } from "@/components/admin/AdminProjectControls";
 import { ProjectStatusBadge } from "@/components/portal/ProjectStatusBadge";
+import { ProjectMessagesPanel } from "@/components/workflow/ProjectMessagesPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,7 +46,9 @@ async function AdminProjectDetailBody({ params }: { params: Promise<{ id: string
     customer,
     responses,
     files,
+    deliverables,
     quotations,
+    messages,
     statusHistory,
     staffOptions,
   } = detail;
@@ -219,6 +223,28 @@ async function AdminProjectDetailBody({ params }: { params: Promise<{ id: string
                   </div>
                 ))
               )}
+            </CardContent>
+          </Card>
+
+          <AdminDeliverablesManager projectId={project.id} deliverables={deliverables} />
+
+          <Card className="bg-card">
+            <CardHeader>
+              <CardTitle className="text-base">
+                Messages &amp; Internal Notes ({messages.length})
+              </CardTitle>
+              <CardDescription>
+                Client-visible updates, clarification requests, and private internal team notes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ProjectMessagesPanel
+                projectId={project.id}
+                customerId={project.customer_id}
+                projectStatus={project.status}
+                mode="admin"
+                messages={messages}
+              />
             </CardContent>
           </Card>
         </div>

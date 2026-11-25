@@ -99,3 +99,98 @@ export function buildProjectSubmittedEmail(payload: ProjectSubmittedEmailPayload
     ].join("\n"),
   };
 }
+
+export function buildQuotationResponseEmail(payload: {
+  projectCode: string;
+  quoteNumber: string;
+  projectTitle: string;
+  decision: "accepted" | "revision_requested" | "declined";
+  note?: string | null;
+}) {
+  const safeCode = escapeHtml(payload.projectCode);
+  const safeQuote = escapeHtml(payload.quoteNumber);
+  const safeTitle = escapeHtml(payload.projectTitle);
+  const label =
+    payload.decision === "accepted"
+      ? "Accepted"
+      : payload.decision === "revision_requested"
+        ? "Revision Requested"
+        : "Declined";
+  const safeNote = payload.note ? escapeHtml(payload.note) : "None";
+
+  return {
+    subject: `[ELEVANTE] Quotation ${safeQuote} ${label} — ${safeCode}`,
+    html: `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#17264F;">
+        <div style="background:linear-gradient(100deg,#17264F 0%,#245B70 52%,#319C78 100%);padding:20px 24px;border-radius:12px 12px 0 0;color:#ffffff;">
+          <h1 style="margin:0;font-size:18px;">Quotation ${label}</h1>
+          <p style="margin:4px 0 0;font-size:12px;opacity:0.9;">${safeQuote} · ${safeCode}</p>
+        </div>
+        <div style="border:1px solid #d8ddd6;border-top:none;padding:24px;border-radius:0 0 12px 12px;background:#ffffff;">
+          <p><strong>Project:</strong> ${safeTitle}</p>
+          <p><strong>Customer Decision:</strong> ${label}</p>
+          <p><strong>Note:</strong> ${safeNote}</p>
+        </div>
+      </div>
+    `.trim(),
+    text: `Quotation ${payload.quoteNumber} (${payload.projectCode}) ${label}\nProject: ${payload.projectTitle}\nNote: ${payload.note || "None"}`,
+  };
+}
+
+export function buildProjectMessageEmail(payload: {
+  projectCode: string;
+  projectTitle: string;
+  senderName: string;
+  messageType: string;
+  body: string;
+}) {
+  const safeCode = escapeHtml(payload.projectCode);
+  const safeTitle = escapeHtml(payload.projectTitle);
+  const safeSender = escapeHtml(payload.senderName);
+  const safeBody = escapeHtml(payload.body).replaceAll("\n", "<br />");
+
+  return {
+    subject: `[ELEVANTE] New Project Update — ${payload.projectCode}`,
+    html: `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#17264F;">
+        <div style="background:linear-gradient(100deg,#17264F 0%,#245B70 52%,#319C78 100%);padding:20px 24px;border-radius:12px 12px 0 0;color:#ffffff;">
+          <h1 style="margin:0;font-size:18px;">New Project Message</h1>
+          <p style="margin:4px 0 0;font-size:12px;opacity:0.9;">${safeCode} — ${safeTitle}</p>
+        </div>
+        <div style="border:1px solid #d8ddd6;border-top:none;padding:24px;border-radius:0 0 12px 12px;background:#ffffff;">
+          <p><strong>From:</strong> ${safeSender}</p>
+          <p style="line-height:1.6;">${safeBody}</p>
+        </div>
+      </div>
+    `.trim(),
+    text: `Project ${payload.projectCode} (${payload.projectTitle})\nFrom: ${payload.senderName}\n\n${payload.body}`,
+  };
+}
+
+export function buildDeliverableReleasedEmail(payload: {
+  projectCode: string;
+  projectTitle: string;
+  deliverableTitle: string;
+  versionLabel: string;
+}) {
+  const safeCode = escapeHtml(payload.projectCode);
+  const safeTitle = escapeHtml(payload.projectTitle);
+  const safeDel = escapeHtml(payload.deliverableTitle);
+  const safeVer = escapeHtml(payload.versionLabel);
+
+  return {
+    subject: `[ELEVANTE] Deliverable Ready (${payload.versionLabel}) — ${payload.projectCode}`,
+    html: `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#17264F;">
+        <div style="background:linear-gradient(100deg,#17264F 0%,#245B70 52%,#319C78 100%);padding:20px 24px;border-radius:12px 12px 0 0;color:#ffffff;">
+          <h1 style="margin:0;font-size:18px;">New Deliverable Released</h1>
+          <p style="margin:4px 0 0;font-size:12px;opacity:0.9;">${safeCode} · ${safeTitle}</p>
+        </div>
+        <div style="border:1px solid #d8ddd6;border-top:none;padding:24px;border-radius:0 0 12px 12px;background:#ffffff;">
+          <p><strong>${safeDel}</strong> (${safeVer}) is now available for download inside your ELEVANTE Client Portal.</p>
+        </div>
+      </div>
+    `.trim(),
+    text: `Deliverable Released: ${payload.deliverableTitle} (${payload.versionLabel}) for ${payload.projectCode}`,
+  };
+}

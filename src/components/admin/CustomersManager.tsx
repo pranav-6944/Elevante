@@ -116,4 +116,3 @@ export function CustomersManager({ customers }: { customers: AdminCustomerRecord
     </div>
   );
 }
-

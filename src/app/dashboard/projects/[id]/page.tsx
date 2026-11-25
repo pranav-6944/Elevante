@@ -19,6 +19,8 @@ import { PROJECT_STATUS_META } from "@/lib/validations/projects";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ProjectAttachmentUploader } from "@/components/portal/ProjectAttachmentUploader";
 import { ProjectStatusBadge } from "@/components/portal/ProjectStatusBadge";
+import { QuotationResponseActions } from "@/components/portal/QuotationResponseActions";
+import { ProjectMessagesPanel } from "@/components/workflow/ProjectMessagesPanel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -378,6 +380,12 @@ async function ProjectDetailContent({ params }: { params: Promise<{ id: string }
                         Total: {formatMoneyMinor(quote.total_minor, quote.currency)}
                       </p>
                     </div>
+
+                    <QuotationResponseActions
+                      quotationId={quote.id}
+                      status={quote.status}
+                      existingNote={quote.customer_response_note}
+                    />
                   </CardContent>
                 </Card>
               ))}
@@ -386,32 +394,23 @@ async function ProjectDetailContent({ params }: { params: Promise<{ id: string }
         </TabsContent>
 
         <TabsContent value="messages">
-          {messages.length === 0 ? (
-            <EmptyState
-              title="No Messages Yet"
-              description="Clarifications and project thread updates from our team will appear here."
-            />
-          ) : (
-            <Card className="bg-card">
-              <CardContent className="space-y-3 pt-6">
-                {messages.map((msg) => (
-                  <div key={msg.id} className="bg-background rounded-xl border p-4 text-sm">
-                    <div className="flex items-center justify-between gap-2 text-xs">
-                      <Badge variant="outline" className="capitalize">
-                        {msg.message_type.replace("_", " ")}
-                      </Badge>
-                      <span className="text-muted-foreground">
-                        {formatShortDate(msg.created_at)}
-                      </span>
-                    </div>
-                    <p className="text-foreground mt-2 leading-relaxed whitespace-pre-wrap">
-                      {msg.body}
-                    </p>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
+          <Card className="bg-card">
+            <CardHeader>
+              <CardTitle className="text-lg">Project Communication</CardTitle>
+              <CardDescription>
+                Message the ELEVANTE team directly or reply to clarification requests.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ProjectMessagesPanel
+                projectId={project.id}
+                customerId={project.customer_id}
+                projectStatus={project.status}
+                mode="customer"
+                messages={messages}
+              />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

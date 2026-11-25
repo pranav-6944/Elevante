@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { isSupabaseConfigured } from "@/config/env";
+import { isAdminSupabaseConfigured, isSupabaseConfigured } from "@/config/env";
 import { requireAuth } from "@/lib/auth/guards";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { AppError, normalizeActionError } from "@/lib/utils/errors";
 import { canUserDownloadFile, isValidStoragePrefixForProject } from "@/lib/validations/projects";
@@ -47,6 +48,7 @@ export async function GET(request: Request, context: { params: Promise<{ fileId:
     let storagePath = "";
     let originalFilename = "download";
     let isCustomerAccessible = true;
+    let currentDownloadCount = 0;
 
     if (kind === "deliverable") {
       const { data: deliverable } = await supabase
@@ -63,6 +65,11 @@ export async function GET(request: Request, context: { params: Promise<{ fileId:
       }
 
       projectId = deliverable.project_id;
+      bucket = deliverable.bucket;
+      storagePath = deliverable.storage_path;
+      originalFilename = deliverable.original_filename;
+      isCustomerAccessible = deliverable.is_customer_accessible;
+      currentDownloadCount = deliverable.download_count;
       bucket = deliverable.bucket;
       storagePath = deliverable.storage_path;
       originalFilename = deliverable.original_filename;
@@ -137,6 +144,13 @@ export async function GET(request: Request, context: { params: Promise<{ fileId:
         },
         { status: 500 }
       );
+    }
+
+    if (kind === "deliverable" && actor.role === "customer" && isAdminSupabaseConfigured()) {
+      await createAdminClient()
+        .from("deliverables")
+        .update({ download_count: currentDownloadCount + 1 })
+        .eq("id", parsedId.data);
     }
 
     if (jsonMode) {

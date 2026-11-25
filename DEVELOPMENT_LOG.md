@@ -4,13 +4,35 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 7 — Admin Dashboard` (**Completed**)
-- **Next Recommended Phase:** `Phase 8 — End-to-End Project & Quotation Workflow` *(awaiting explicit user approval)*
-- **Next Recommended Action:** Complete the interactive 14-step customer/admin workflow: quotation acceptance/revision/decline actions, two-way project messaging (`is_internal_note` protection), deliverables upload (`project-deliverables`) with release toggles and download counting, and completion status lock.
+- **Current Phase:** `Phase 8 — End-to-End Project & Quotation Workflow` (**Completed**)
+- **Next Recommended Phase:** `Phase 9 — SEO, Optimization, Accessibility & Security Review` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Audit SEO/AEO/GEO metadata and JSON-LD schema coverage, Core Web Vitals/accessibility compliance, HTTP security headers/CSP, and error monitoring readiness across the entire platform.
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 8: End-to-End Project & Quotation Workflow & IDE Fixes
+- **Completed Work:**
+  - Added `.vscode/settings.json` (`css.lint.unknownAtRules: "ignore"`, `files.associations`, workspace `typescript.tsdk`) resolving VS Code CSS linter complaints on Tailwind v4 `@custom-variant`, `@theme`, and `@apply` directives, and documented cleanup of the stale deleted `src/app/page.tsx` IDE tab superseded by `src/app/(marketing)/page.tsx`.
+  - Built Phase 8 workflow validation, `project-deliverables` 100 MB MIME/extension policy, quotation decision state guards, message/internal-note RBAC guards, and automated status transition rules (`src/lib/validations/workflow.ts`) with a full 14-step workflow unit/integration test (`src/lib/validations/workflow.test.ts`).
+  - Added HTML-escaped Resend notification templates and dispatch helpers (`buildQuotationResponseEmail`, `buildProjectMessageEmail`, `buildDeliverableReleasedEmail`) in `src/lib/email/{templates.ts,templates.test.ts,resend.ts}`.
+  - Built `src/actions/workflow.actions.ts` (`respondToQuotationAction`, `postProjectMessageAction`, `toggleDeliverableVisibilityAction`), `POST /api/admin/projects/[id]/deliverables`, and customer deliverable download counting inside `GET /api/projects/files/[fileId]/download`.
+  - Wired `<QuotationResponseActions />`, shared `<ProjectMessagesPanel />`, and `<AdminDeliverablesManager />` into Customer (`/dashboard/projects/[id]`) and Admin (`/admin/projects/[id]`) workspaces.
+- **Files Created / Modified:**
+  - Tooling & Validation: `.vscode/settings.json`, `src/lib/validations/{workflow.ts,workflow.test.ts}`
+  - Email, Actions & APIs: `src/lib/email/{templates.ts,templates.test.ts,resend.ts}`, `src/actions/workflow.actions.ts`, `src/app/api/admin/projects/[id]/deliverables/route.ts`, `src/app/api/projects/files/[fileId]/download/route.ts`
+  - UI & Workspaces: `src/components/portal/QuotationResponseActions.tsx`, `src/components/workflow/ProjectMessagesPanel.tsx`, `src/components/admin/AdminDeliverablesManager.tsx`, `src/app/dashboard/projects/[id]/page.tsx`, `src/app/admin/projects/[id]/page.tsx`
+  - Docs: `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check`, `npm test` (`23/23` tests), `npm run typecheck`, `npm run lint`, and `npm run build` (`49/49` static page workers) verified after final edits.
+  - Live `next start` confirmed `401` JSON on unauthenticated `POST /api/admin/projects/[id]/deliverables` alongside all Customer/Admin routes and `0` static bundle secret leaks.
+- **Unresolved / Deferred Setup:**
+  - End-to-end live database execution of all 14 workflow steps against Supabase PostgreSQL, `project-deliverables` bucket uploads, and live Resend email sends await `.env.local` credentials.
+- **Pending Tasks:**
+  - Await explicit user approval for **Phase 9 — SEO, Optimization, Accessibility & Security Review**.
+
+---
 
 ### 2026-11-25 — Phase 7: Admin Dashboard
 - **Completed Work:**

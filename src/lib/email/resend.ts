@@ -2,8 +2,11 @@ import "server-only";
 import { Resend } from "resend";
 import { getServerEnv } from "@/config/env";
 import {
+  buildDeliverableReleasedEmail,
   buildEnquiryNotificationEmail,
+  buildProjectMessageEmail,
   buildProjectSubmittedEmail,
+  buildQuotationResponseEmail,
   type EnquiryEmailPayload,
   type ProjectSubmittedEmailPayload,
 } from "./templates";
@@ -113,4 +116,65 @@ export async function sendProjectSubmittedEmails(
       replyTo: payload.customerEmail,
     });
   }
+}
+
+export async function sendQuotationResponseEmail(params: {
+  recipientEmail: string;
+  projectCode: string;
+  quoteNumber: string;
+  projectTitle: string;
+  decision: "accepted" | "revision_requested" | "declined";
+  note?: string | null;
+}) {
+  const content = buildQuotationResponseEmail(params);
+  await sendEmail({
+    to: params.recipientEmail,
+    subject: content.subject,
+    html: content.html,
+    text: content.text,
+  });
+
+  const { CONTACT_NOTIFICATION_EMAIL } = getServerEnv();
+  if (CONTACT_NOTIFICATION_EMAIL && CONTACT_NOTIFICATION_EMAIL !== params.recipientEmail) {
+    await sendEmail({
+      to: CONTACT_NOTIFICATION_EMAIL,
+      subject: content.subject,
+      html: content.html,
+      text: content.text,
+      replyTo: params.recipientEmail,
+    });
+  }
+}
+
+export async function sendProjectMessageEmail(params: {
+  recipientEmail: string;
+  projectCode: string;
+  projectTitle: string;
+  senderName: string;
+  messageType: string;
+  body: string;
+}) {
+  const content = buildProjectMessageEmail(params);
+  await sendEmail({
+    to: params.recipientEmail,
+    subject: content.subject,
+    html: content.html,
+    text: content.text,
+  });
+}
+
+export async function sendDeliverableReleasedEmail(params: {
+  recipientEmail: string;
+  projectCode: string;
+  projectTitle: string;
+  deliverableTitle: string;
+  versionLabel: string;
+}) {
+  const content = buildDeliverableReleasedEmail(params);
+  await sendEmail({
+    to: params.recipientEmail,
+    subject: content.subject,
+    html: content.html,
+    text: content.text,
+  });
 }

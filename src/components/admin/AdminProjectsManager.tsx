@@ -123,4 +123,3 @@ export function AdminProjectsManager({ projects }: { projects: AdminProjectListI
     </div>
   );
 }
-

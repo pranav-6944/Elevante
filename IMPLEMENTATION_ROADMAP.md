@@ -177,10 +177,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 8 Start)
+## Recommended Exact Next Task (Phase 9 Start)
 
-When **Phase 8 — End-to-End Project & Quotation Workflow** is approved:
-1. Build customer interactive quotation review actions (`accept`, `request_revision`, `decline` with note & state machine validation) and automated status transitions (`quote_accepted` -> `in_progress` -> `review_ready` -> `revision_requested` -> `completed`).
-2. Build two-way Customer <-> Admin/Staff project messaging (`project_messages` keeping `is_internal_note = true` strictly admin/staff-only) with email + notification triggers.
-3. Build Admin Deliverables upload (`project-deliverables` bucket), `is_customer_accessible` release toggle, and download tracking (`download_count`) alongside a full 14-step integration test.
+When **Phase 9 — SEO, Optimization, Accessibility & Security Review** is approved:
+1. Perform comprehensive SEO, AEO, and GEO validation (`robots.txt`, `sitemap.xml`, metadata uniqueness, and full Schema.org JSON-LD graph across public pages).
+2. Execute Next.js / React performance & accessibility review (Core Web Vitals checks, semantic HTML, keyboard focus, contrast, reduced motion, dynamic Three.js chunking, bundle analysis).
+3. Run full `security-audit` verification across HTTP security headers (`next.config.ts` CSP/HSTS/XFO/XCTO), RLS & permission boundaries, rate-limit hardening, and error monitoring readiness.
 
