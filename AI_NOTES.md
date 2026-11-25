@@ -50,11 +50,13 @@
 
 ---
 
-## 4. Key Code Locations (Phases 1–3)
+## 4. Key Code Locations (Phases 1–4)
+- **Important User Reminder (Phase 10 Go-Live):** Before moving from dev to live production, remind Pranav of all external details & credentials needed (Supabase URL/keys, Resend API key + verified domain DNS/SMTP, production domain URL, initial `super_admin` promotion email, official agency support email/phone/address, Omkar Sable bio/photo, final legal review, Vercel env vars, error monitoring DSN).
 - Env & Brand Config: `src/config/env.ts`, `src/config/site.ts`, `.env.example`
 - Supabase Clients & Types: `src/lib/supabase/{client.ts,server.ts,admin.ts}`, `src/types/database.ts`
 - Migrations & Seed: `supabase/migrations/{202611250001_init_schema.sql,202611250002_rls_and_functions.sql,202611250003_storage_buckets.sql}`, `supabase/seed.sql`, `supabase/config.toml`
 - Security, Rate Limit & Email: `src/lib/security/{ip.ts,rate-limit.ts}`, `src/lib/email/{templates.ts,resend.ts}`, `src/lib/services/enquiry.service.ts`
+- Auth & RBAC: `src/proxy.ts`, `src/app/api/auth/callback/route.ts`, `src/actions/auth.actions.ts`, `src/lib/auth/{session.ts,guards.ts,rbac.ts,redirects.ts}`, `src/lib/validations/auth.ts`, `src/app/(auth)/`, `src/components/auth/`, `src/app/dashboard/`, `src/app/admin/`
 - Error & Action Envelope: `src/types/action.ts`, `src/lib/utils/errors.ts`
 - Global Boundaries & APIs: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/{health,contact}/route.ts`
 - Brand UI Primitives: `src/components/common/{BrandLogo.tsx,StatusIllustration.tsx,EmptyState.tsx}`

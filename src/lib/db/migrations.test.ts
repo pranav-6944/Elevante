@@ -36,4 +36,3 @@ test("SQL migrations exist, enable RLS on all public tables, and include Storage
   assert.ok(storageSql.includes("'project-attachments'"));
   assert.ok(storageSql.includes("'project-deliverables'"));
 });
-

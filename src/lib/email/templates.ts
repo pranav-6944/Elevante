@@ -61,4 +61,3 @@ export function buildEnquiryNotificationEmail(payload: EnquiryEmailPayload) {
     ].join("\n"),
   };
 }
-

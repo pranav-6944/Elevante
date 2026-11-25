@@ -56,4 +56,3 @@ export async function enforceRateLimit({
     resetAt: row.reset_at,
   };
 }
-

@@ -66,4 +66,3 @@ export async function submitPublicEnquiry({
 
   return { enquiryId: data.id };
 }
-

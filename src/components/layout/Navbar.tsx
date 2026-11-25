@@ -60,7 +60,10 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-2.5 md:flex">
+          <Button asChild variant="ghost" size="default">
+            <Link href="/login">Sign In</Link>
+          </Button>
           <Button
             asChild
             size="default"
@@ -122,7 +125,12 @@ export function Navbar() {
                     </Link>
                   );
                 })}
-                <div className="pt-4">
+                <div className="flex flex-col gap-2 pt-4">
+                  <Button asChild variant="outline" size="lg" className="w-full">
+                    <Link href="/login" onClick={() => setOpen(false)}>
+                      Sign In
+                    </Link>
+                  </Button>
                   <Button
                     asChild
                     size="lg"

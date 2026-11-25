@@ -4,13 +4,37 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 3 — Database and Backend Foundation` (**Completed**)
-- **Next Recommended Phase:** `Phase 4 — Authentication and Authorization` *(awaiting explicit user approval)*
-- **Next Recommended Action:** Implement Auth UI (`/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`), PKCE `/api/auth/callback`, `src/proxy.ts` session refresh, and server-side RBAC guards (`requireUser`, `requireRole`, `requirePermission`).
+- **Current Phase:** `Phase 4 — Authentication and Authorization` (**Completed**)
+- **Next Recommended Phase:** `Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Build Admin Category & Service management, Dynamic Service-Specific Form Builder, reusable `<DynamicServiceForm />` with dynamic Zod validation, CMS section/media management, and wire live `/services`, `/services/[slug]`, and `/faq` queries.
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 4: Authentication & Authorization
+- **Completed Work:**
+  - Implemented pure security & RBAC helpers (`src/lib/auth/redirects.ts` blocking open redirects, `src/lib/auth/rbac.ts` role predicates) and server-only session/guards (`src/lib/auth/session.ts`, `src/lib/auth/guards.ts` providing `requireAuth`, `requireRole`, `requirePermission`, `requireAuthOrRedirect`, `requireRoleOrRedirect`).
+  - Implemented Next.js 16 `src/proxy.ts` for SSR cookie refresh, `/dashboard/*` and `/admin/*` unauthenticated redirects, role-based `/admin` gate, and `Cache-Control: private, no-store` on protected segments.
+  - Built `/api/auth/callback` supporting PKCE `code` (`exchangeCodeForSession`) and email/recovery `token_hash` (`verifyOtp`) with open-redirect sanitization.
+  - Created Zod auth schemas (`src/lib/validations/auth.ts`), auth Server Actions (`src/actions/auth.actions.ts`: `registerAction`, `loginAction`, `forgotPasswordAction`, `resetPasswordAction`, `resendVerificationAction`, `updateProfileAction`, `signOutAction`), and Auth UI (`src/app/(auth)/` + `src/components/auth/`).
+  - Created protected `/dashboard`, `/dashboard/settings` (profile + password update), and `/admin` role-gated shells wrapped in `<Suspense>` for Next.js 16 `cacheComponents: true`, plus added `Sign In` links to `Navbar`.
+  - Noted user's request to provide a complete external production credentials & business inputs checklist before moving live in Phase 10.
+- **Files Created / Modified:**
+  - Auth Core & Proxy: `src/proxy.ts`, `src/app/api/auth/callback/route.ts`, `src/actions/auth.actions.ts`, `src/lib/auth/{session.ts,guards.ts,rbac.ts,redirects.ts}`, `src/lib/validations/auth.ts`
+  - Auth UI & Protected Shells: `src/app/(auth)/{layout.tsx,login/page.tsx,register/page.tsx,verify-email/page.tsx,forgot-password/page.tsx,reset-password/page.tsx}`, `src/components/auth/{LoginForm.tsx,RegisterForm.tsx,ForgotPasswordForm.tsx,ResetPasswordForm.tsx,VerifyEmailCard.tsx,ProfileSettingsForm.tsx}`, `src/app/dashboard/{layout.tsx,page.tsx,settings/page.tsx}`, `src/app/admin/{layout.tsx,page.tsx}`, `src/components/layout/Navbar.tsx`
+  - Tests & Docs: `src/lib/auth/{rbac.test.ts,redirects.test.ts}`, `src/lib/validations/auth.test.ts`, `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check` passed.
+  - `npm test` passed (`12/12` tests covering RBAC hierarchy, open-redirect blocking, and password complexity/matching).
+  - `npm run typecheck`, `npm run lint`, and `npm run build` (`25/25` routes + `ƒ Proxy`) passed cleanly.
+  - Live `next start` verified `200` (`noindex=True`) on all 5 auth pages, `307` redirect to `/login?next=...` on `/dashboard`, `/dashboard/settings`, `/admin`, and safe handling on `/api/auth/callback?next=//evil.com`.
+- **Unresolved / Deferred Setup:**
+  - Live Supabase Auth signup -> email verification -> login -> password recovery -> role-upgrade tests await `.env.local` Supabase credentials and migrated database.
+- **Pending Tasks:**
+  - Await explicit user approval for **Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring**.
+
+---
 
 ### 2026-11-25 — Phase 3: Database and Backend Foundation
 - **Completed Work:**

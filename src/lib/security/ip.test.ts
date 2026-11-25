@@ -12,4 +12,3 @@ test("extractClientIp prioritizes x-forwarded-for first entry and falls back saf
   const empty = new Headers();
   assert.equal(extractClientIp(empty), "unknown");
 });
-

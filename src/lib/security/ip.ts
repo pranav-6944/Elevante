@@ -19,4 +19,3 @@ export function extractClientIp(headers: Headers): string {
 
   return "unknown";
 }
-

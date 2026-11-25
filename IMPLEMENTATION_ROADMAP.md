@@ -74,18 +74,17 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Phase 4 — Authentication and Authorization
+## Phase 4 — Authentication and Authorization *(Completed)*
 - **Prerequisites:** Phase 3 complete.
 - **Features & Scope:**
-  - Auth UI & flows: `/register`, `/login`, `/verify-email`, `/forgot-password`, `/reset-password`, and `/api/auth/callback` (PKCE).
-  - `src/proxy.ts` (Next.js 16 convention replacing `middleware.ts`) session refresh and unauthenticated redirects for `/dashboard/*` and `/admin/*`.
-  - Server-side auth & RBAC guards (`requireUser()`, `requireRole()`, `requirePermission()`).
-  - Admin access bootstrap / role verification mechanism (`super_admin`, `admin`, `staff`, `customer`).
-  - Account profile view & password update foundation.
+  - Built Auth UI & flows (`/register`, `/login`, `/verify-email`, `/forgot-password`, `/reset-password`) and `/api/auth/callback` supporting PKCE `code` exchange and OTP `token_hash` verification with open-redirect sanitization (`sanitizeRedirectPath`).
+  - Implemented Next.js 16 `src/proxy.ts` for SSR cookie refresh, unauthenticated redirects away from `/dashboard/*` and `/admin/*`, optimistic `/admin` role check, and `Cache-Control: private, no-store`.
+  - Implemented server-only session & RBAC guards (`src/lib/auth/session.ts`, `src/lib/auth/guards.ts` with `requireAuth`, `requireRole`, `requirePermission`, `requireAuthOrRedirect`, `requireRoleOrRedirect`).
+  - Built Server Actions (`src/actions/auth.actions.ts`) with server-side Zod validation, active-account verification, anti-enumeration password reset, profile update (`updateProfileAction`), and sign-out.
+  - Built protected `/dashboard`, `/dashboard/settings` (profile & password update), and `/admin` route shells.
 - **Testing & Security Requirements:**
-  - End-to-end verification of signup -> email verification -> login -> password reset -> logout.
-  - Verify unauthenticated requests to `/dashboard`, `/admin`, and protected Server Actions return unauthorized/redirect.
-  - Verify `customer` role is blocked server-side from all `/admin` routes and admin actions (403).
+  - `12/12` unit tests pass (RBAC hierarchy, open-redirect blocking, password policy validation); live `next start` verified unauthenticated `307` redirects on `/dashboard`, `/dashboard/settings`, and `/admin`.
+  - Live Supabase signup/verify/reset tests await `.env.local` keys and migrated Supabase Auth configuration.
 
 ---
 
@@ -172,16 +171,16 @@ Phase 0 (Analysis & Docs)
   - Unit tests (Zod validators, dynamic form schema builder, pricing/quotation totals, permission helpers).
   - Integration tests (Server Actions, RLS policy assertions, file signer authorization).
   - End-to-End (E2E) test suite (Playwright: public browse, registration/login, project brief submission, admin quote send, customer quote accept, deliverable download).
-  - Production environment setup: Vercel project env vars, Supabase production migrations & custom SMTP (Resend), domain DNS, error monitoring setup.
+  - Production environment setup: Vercel project env vars, Supabase production migrations & custom SMTP (Resend), domain DNS, error monitoring setup, and external go-live credentials/inputs handover checklist.
   - Production Readiness Checklist & final verification (`npm run lint`, `tsc --noEmit`, `npm test`, `npm run build`).
 - **Completion Criteria:** All automated tests and production build pass; deployment checklist verified without skipped assertions.
 
 ---
 
-## Recommended Exact Next Task (Phase 4 Start)
+## Recommended Exact Next Task (Phase 5 Start)
 
-When **Phase 4 — Authentication and Authorization** is approved:
-1. Build auth routes & forms under `src/app/(auth)/` (`/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`) and PKCE callback `/api/auth/callback`.
-2. Implement `src/proxy.ts` (Next.js 16 convention) to refresh Supabase SSR cookies and protect `/dashboard/*` and `/admin/*` optimistically.
-3. Implement server-side auth & RBAC guards (`src/lib/auth/session.ts` and `src/lib/auth/guards.ts` with `requireUser()`, `requireRole()`, `requirePermission()`).
+When **Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring** is approved:
+1. Build Admin Category & Service management (`/admin/categories`, `/admin/services`) with publish/unpublish, reorder, soft-delete, deliverables, pricing modes, and SEO fields.
+2. Build Dynamic Service-Specific Form Builder (`/admin/services/[id]/form`) and reusable `<DynamicServiceForm />` with dynamic server-side Zod validation.
+3. Build initial CMS Content & Media management (`/admin/content`, `/admin/media`) and wire public `/services`, `/services/[slug]`, and `/faq` directly to live Supabase PostgreSQL with tag revalidation.
 

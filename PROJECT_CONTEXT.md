@@ -1,6 +1,6 @@
 # ELEVANTE — Project Context
 
-> **Current Status:** Phase 3 (Database and Backend Foundation) complete — awaiting explicit approval before Phase 4 implementation.  
+> **Current Status:** Phase 4 (Authentication and Authorization) complete — awaiting explicit approval before Phase 5 implementation.  
 > **Primary Source of Truth:** [ProjectBrief.md](./ProjectBrief.md)
 
 ---
@@ -124,7 +124,7 @@ Where `ProjectBrief.md` left implementation details unspecified, the following p
 
 ## 8. Current Implementation Status
 
-- **Active Phase:** Phase 3 — Database and Backend Foundation (**Completed**)
-- **Application Code:** SQL migrations (`0001_init_schema.sql`, `0002_rls_and_functions.sql`, `0003_storage_buckets.sql`), `supabase/seed.sql`, `supabase/config.toml`, typed PostgreSQL `Database` schema (`src/types/database.ts`), typed Supabase clients, PostgreSQL error normalizer (`normalizeDatabaseError`), atomic `check_rate_limit` RPC + `enforceRateLimit`, Resend HTML-escaped notification service (`src/lib/email/`), and `submitPublicEnquiry` (`src/lib/services/enquiry.service.ts`) wired into `/api/contact` and `/api/health`.
-- **Next Recommended Phase:** Phase 4 — Authentication and Authorization (awaiting explicit approval; apply migrations & populate `.env.local` to test live Supabase DB operations)
+- **Active Phase:** Phase 4 — Authentication and Authorization (**Completed**)
+- **Application Code:** Auth pages (`/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`), PKCE/OTP `/api/auth/callback` with open-redirect protection, Next.js 16 `src/proxy.ts` session refresh & route gate, server-side RBAC guards (`requireAuth`, `requireRole`, `requirePermission`, `requireAuthOrRedirect`, `requireRoleOrRedirect`), auth Server Actions (`src/actions/auth.actions.ts`), and guarded `/dashboard`, `/dashboard/settings`, and `/admin` shells verified.
+- **Next Recommended Phase:** Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring (awaiting explicit approval)
 
