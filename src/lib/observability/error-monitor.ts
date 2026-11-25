@@ -21,4 +21,3 @@ export function logStructuredError(
 
   console.error(JSON.stringify(payload));
 }
-

@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ELEVANTE — Digital Solutions Agency Platform
 
-## Getting Started
+Full-stack digital solutions agency website, dynamic service brief builder, isolated customer portal, and role-based operations dashboard built with Next.js 16 (App Router), React 19, Tailwind CSS v4, shadcn/ui, Motion, Three.js / React Three Fiber, Supabase, Zod, and Resend.
 
-First, run the development server:
+## Quick Local Preview (Before Deployment)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Install dependencies (if needed):
+   ```bash
+   npm install
+   ```
+2. Preview locally:
+   - **Development mode:** `npm run dev`
+   - **Production preview (recommended before go-live):**
+     ```bash
+     npm run build
+     npm run start
+     ```
+3. Open [http://localhost:3000](http://localhost:3000).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Public marketing pages, responsive 3D/Motion UI, service catalogs, form validation, and SEO routes work immediately out of the box with curated defaults. To enable authentication, database persistence, file uploads, and email alerts, copy [`.env.example`](./.env.example) to `.env.local` and follow [`DEPLOYMENT_CHECKLIST.md`](./DEPLOYMENT_CHECKLIST.md).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` — Run local Next.js dev server
+- `npm run build` — Build production bundle
+- `npm run start` — Serve production build locally
+- `npm test` — Run unit and production-readiness tests (`node --test --experimental-strip-types`)
+- `npm run typecheck` — Generate Next types and run `tsc --noEmit`
+- `npm run lint` — Run ESLint
+- `npm run format:check` — Verify Prettier formatting
 
-## Learn More
+## Project Documentation
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`ProjectBrief.md`](./ProjectBrief.md) — Product vision and specification
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — System architecture and security boundaries
+- [`DATABASE_DESIGN.md`](./DATABASE_DESIGN.md) — PostgreSQL schema, RLS, and Storage layout
+- [`IMPLEMENTATION_ROADMAP.md`](./IMPLEMENTATION_ROADMAP.md) — Completed phases (0–10)
+- [`DEPLOYMENT_CHECKLIST.md`](./DEPLOYMENT_CHECKLIST.md) — Pre-launch verification and production credentials checklist

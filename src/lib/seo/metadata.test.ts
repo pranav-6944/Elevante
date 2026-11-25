@@ -42,4 +42,3 @@ test("buildBreadcrumbJsonLd and buildOrganizationJsonLd produce valid Schema.org
   assert.equal(org["@type"], "Organization");
   assert.equal(org.founders.length, 2);
 });
-
