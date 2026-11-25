@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { isSupabaseConfigured } from "@/config/env";
-import { contactEnquirySchema } from "@/lib/validations/enquiry";
-import { normalizeActionError } from "@/lib/utils/errors";
+import { extractClientIp } from "@/lib/security/ip";
+import { submitPublicEnquiry } from "@/lib/services/enquiry.service";
+import { AppError, normalizeActionError } from "@/lib/utils/errors";
 
 export async function POST(request: Request) {
   try {
@@ -16,41 +16,19 @@ export async function POST(request: Request) {
       );
     }
 
-    const parsed = contactEnquirySchema.safeParse(body);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { ok: false, error: normalizeActionError(parsed.error) },
-        { status: 400 }
-      );
-    }
+    const clientIp = extractClientIp(request.headers);
+    const result = await submitPublicEnquiry({ rawBody: body, clientIp });
 
-    if (!isSupabaseConfigured()) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: {
-            code: "CONFIGURATION_ERROR",
-            message:
-              "Your enquiry was validated successfully, but database storage and email delivery will be activated in Phase 3. In the meantime, please email us directly.",
-          },
-        },
-        { status: 503 }
-      );
-    }
-
-    // Phase 3 wires rate limiting, Supabase `enquiries` insertion, and Resend email dispatch.
-    return NextResponse.json(
-      {
-        ok: false,
-        error: {
-          code: "CONFIGURATION_ERROR",
-          message:
-            "Enquiry database persistence is scheduled for Phase 3. Please email us directly until Phase 3 is deployed.",
-        },
-      },
-      { status: 503 }
-    );
+    return NextResponse.json({ ok: true, data: result }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ ok: false, error: normalizeActionError(error) }, { status: 500 });
+    const normalized = normalizeActionError(error);
+    const status =
+      error instanceof AppError
+        ? error.statusCode
+        : normalized.code === "VALIDATION_ERROR"
+          ? 400
+          : 500;
+
+    return NextResponse.json({ ok: false, error: normalized }, { status });
   }
 }

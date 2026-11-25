@@ -62,18 +62,15 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Phase 3 — Database and Backend Foundation
-- **Prerequisites:** Phase 1 complete (can start alongside or right after Phase 2); Supabase project credentials available.
+## Phase 3 — Database and Backend Foundation *(Completed)*
+- **Prerequisites:** Phase 1 complete; Supabase project credentials required in `.env.local` to run live DB queries.
 - **Features & Scope:**
-  - Author versioned SQL migrations in `supabase/migrations/` for all tables, enums, sequences (`ELV-...`, `QT-...`), triggers (`updated_at`, `auth.users` -> `profiles` sync), and indexes defined in `DATABASE_DESIGN.md`.
-  - Configure Supabase Storage buckets (`public-media`, `project-attachments`, `project-deliverables`) and bucket RLS policies.
-  - Implement server-side RLS policies & DB helper functions (`current_user_role()`, `is_admin()`, `is_admin_or_staff()`).
-  - Create minimal, realistic initial seed (`supabase/seed.sql`) for system roles, permissions, base categories, initial CMS section defaults, and platform settings (no fake testimonials).
-  - Implement server-side data-access utilities, DB error normalizer, rate-limiting helper, and wire `/contact` enquiry submission to `enquiries` table + Resend email notification.
+  - Authored versioned SQL migrations in `supabase/migrations/`: `202611250001_init_schema.sql` (25 tables, 9 enums, `ELV-`/`QT-` sequences, `updated_at` triggers, `auth.users` -> `profiles` trigger, performance indexes), `202611250002_rls_and_functions.sql` (search-path-hardened RBAC helpers, `prevent_profile_privilege_escalation()` trigger, RLS policies on all 25 tables, `service_role`-scoped `check_rate_limit` RPC), and `202611250003_storage_buckets.sql` (`public-media`, `project-attachments`, `project-deliverables` buckets + `storage.objects` RLS).
+  - Created `supabase/config.toml` and `supabase/seed.sql` (permissions, role-permission mappings, founders Pranav Lamkhade & Omkar Sable, 5 service categories, platform settings, initial CMS hero/intro blocks — zero fake reviews).
+  - Added typed `Database` schema (`src/types/database.ts`), parameterized Supabase clients (`<Database>`), `normalizeDatabaseError()`, `extractClientIp()`, `enforceRateLimit()`, Resend email service (`src/lib/email/`), `submitPublicEnquiry()` (`src/lib/services/enquiry.service.ts`), and wired `/api/contact` + `/api/health`.
 - **Testing & Security Requirements:**
-  - Verify migrations apply cleanly from scratch (`supabase db reset` / migration runner).
-  - Test RLS isolation (anon cannot read `profiles`, `enquiries`, `project_requests`, or `audit_logs`; customer A cannot read customer B's rows).
-  - Test `/api/health` and `/contact` server validation + rate limit.
+  - Verified all 25 tables enforce `ENABLE ROW LEVEL SECURITY`, `check_rate_limit` revokes `PUBLIC` access, and `migrations.test.ts` + `9/9` unit tests pass.
+  - Note: Applying migrations to a live Supabase instance and verifying live RLS isolation awaits `.env.local` credentials / Supabase project linking.
 
 ---
 
@@ -181,10 +178,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 3 Start)
+## Recommended Exact Next Task (Phase 4 Start)
 
-When **Phase 3 — Database and Backend Foundation** is approved:
-1. Author sequential SQL migrations in `supabase/migrations/` for all tables, enums, sequences (`ELV-...`, `QT-...`), triggers (`updated_at`, `auth.users` -> `profiles`), indexes, Storage buckets (`public-media`, `project-attachments`, `project-deliverables`), and RLS policies defined in `DATABASE_DESIGN.md`.
-2. Create minimal realistic seed (`supabase/seed.sql`) for roles, permissions, base categories, initial CMS sections, and platform settings (no fake reviews).
-3. Implement serverless-safe `rate_limits` RPC/helper, DB error normalizer, Resend notification helper, and wire `/api/contact` to persist leads into `enquiries`.
+When **Phase 4 — Authentication and Authorization** is approved:
+1. Build auth routes & forms under `src/app/(auth)/` (`/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`) and PKCE callback `/api/auth/callback`.
+2. Implement `src/proxy.ts` (Next.js 16 convention) to refresh Supabase SSR cookies and protect `/dashboard/*` and `/admin/*` optimistically.
+3. Implement server-side auth & RBAC guards (`src/lib/auth/session.ts` and `src/lib/auth/guards.ts` with `requireUser()`, `requireRole()`, `requirePermission()`).
 

@@ -35,6 +35,36 @@ export function fail(
   };
 }
 
+export function normalizeDatabaseError(
+  error: unknown,
+  fallback = "Unable to complete database operation."
+): AppError {
+  if (error instanceof AppError) {
+    return error;
+  }
+
+  if (typeof error === "object" && error !== null && "code" in error) {
+    const code = String((error as { code?: unknown }).code ?? "");
+    if (code === "23505") {
+      return new AppError("CONFLICT", "A record with this identifier already exists.", 409);
+    }
+    if (code === "23503") {
+      return new AppError("VALIDATION_ERROR", "Referenced resource does not exist.", 400);
+    }
+    if (code === "23514") {
+      return new AppError("VALIDATION_ERROR", "Submitted value violates data constraints.", 400);
+    }
+    if (code === "42501") {
+      return new AppError("FORBIDDEN", "You do not have permission for this operation.", 403);
+    }
+    if (code === "PGRST116") {
+      return new AppError("NOT_FOUND", "Requested record was not found.", 404);
+    }
+  }
+
+  return new AppError("DATABASE_ERROR", fallback, 500);
+}
+
 export function normalizeActionError(
   error: unknown,
   fallback = "An unexpected error occurred."

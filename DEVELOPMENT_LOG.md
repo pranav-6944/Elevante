@@ -4,13 +4,36 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 2 — Brand Identity and Public Website` (**Completed**)
-- **Next Recommended Phase:** `Phase 3 — Database and Backend Foundation` *(awaiting explicit user approval & Supabase credentials)*
-- **Next Recommended Action:** Create SQL migrations, Storage buckets, RLS policies, initial seed data, rate-limiting helper, and wire `/api/contact` persistence + Resend notifications in Phase 3.
+- **Current Phase:** `Phase 3 — Database and Backend Foundation` (**Completed**)
+- **Next Recommended Phase:** `Phase 4 — Authentication and Authorization` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Implement Auth UI (`/login`, `/register`, `/verify-email`, `/forgot-password`, `/reset-password`), PKCE `/api/auth/callback`, `src/proxy.ts` session refresh, and server-side RBAC guards (`requireUser`, `requireRole`, `requirePermission`).
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 3: Database and Backend Foundation
+- **Completed Work:**
+  - Installed `resend` SDK (`package.json`).
+  - Authored `supabase/config.toml`, `supabase/seed.sql`, and three sequential SQL migrations (`202611250001_init_schema.sql`, `202611250002_rls_and_functions.sql`, `202611250003_storage_buckets.sql`) covering all 25 tables, 9 enums, `ELV-`/`QT-` code sequences, `auth.users` -> `profiles` sync trigger, privilege-escalation trigger guard, search-path-hardened RLS helper functions, `service_role`-only `check_rate_limit` RPC, and 3 segmented Storage buckets (`public-media`, `project-attachments`, `project-deliverables`) with `storage.objects` policies.
+  - Created full TypeScript `Database` definition (`src/types/database.ts`) and typed all Supabase clients (`client.ts`, `server.ts`, `admin.ts`).
+  - Added `normalizeDatabaseError()` (`src/lib/utils/errors.ts`), `extractClientIp()` (`src/lib/security/ip.ts`), `enforceRateLimit()` (`src/lib/security/rate-limit.ts`), HTML-escaped Resend notification templates (`src/lib/email/templates.ts`, `resend.ts`), and `submitPublicEnquiry()` (`src/lib/services/enquiry.service.ts`).
+  - Wired `/api/contact` to `submitPublicEnquiry` and `/api/health` to report `databaseConfigured` / `databaseReachable`.
+- **Files Created / Modified:**
+  - Supabase: `supabase/config.toml`, `supabase/seed.sql`, `supabase/migrations/{202611250001_init_schema.sql,202611250002_rls_and_functions.sql,202611250003_storage_buckets.sql}`
+  - Backend & Types: `src/types/database.ts`, `src/config/env.ts`, `src/lib/supabase/{client.ts,server.ts,admin.ts}`, `src/lib/utils/errors.ts`, `src/lib/security/{ip.ts,rate-limit.ts}`, `src/lib/email/{templates.ts,resend.ts}`, `src/lib/services/enquiry.service.ts`, `src/app/api/{contact,health}/route.ts`
+  - Tests & Docs: `src/lib/db/migrations.test.ts`, `src/lib/email/templates.test.ts`, `src/lib/security/ip.test.ts`, `src/lib/utils/errors.test.ts`, `package.json`, `package-lock.json`, `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check` passed.
+  - `npm test` passed (`9/9` unit tests covering migration RLS completeness, Postgres error normalization, IP parsing, and XSS escaping in email templates).
+  - `npm run typecheck`, `npm run lint`, and `npm run build` passed (`0` errors).
+  - Live `next start` verified `/api/health` (`200`, `databaseConfigured: false`), `/api/contact` (`400` bad input / `503` unconfigured DB), and zero client bundle secret leaks.
+- **Unresolved / Deferred Setup:**
+  - Live PostgreSQL migration execution (`supabase db push` / SQL editor) and RLS live-DB integration tests await `.env.local` Supabase project keys and linked Supabase instance.
+- **Pending Tasks:**
+  - Await explicit approval for **Phase 4 — Authentication and Authorization**.
+
+---
 
 ### 2026-11-25 — Phase 2: Brand Identity & Public Website
 - **Completed Work:**

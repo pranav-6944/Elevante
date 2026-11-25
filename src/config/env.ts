@@ -46,6 +46,10 @@ export function isSupabaseConfigured(): boolean {
   return Boolean(url && anonKey);
 }
 
+export function isAdminSupabaseConfigured(): boolean {
+  return isSupabaseConfigured() && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
 export function getServerEnv() {
   if (typeof window !== "undefined") {
     throw new Error("getServerEnv() must never be called in a browser context.");

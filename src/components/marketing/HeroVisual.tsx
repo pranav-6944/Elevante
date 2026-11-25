@@ -74,20 +74,20 @@ export function HeroVisual() {
   }
 
   return (
-    <div className="relative h-[320px] w-full overflow-hidden rounded-3xl border border-border/80 bg-card/80 shadow-sm sm:h-[380px]">
+    <div className="border-border/80 bg-card/80 relative h-[320px] w-full overflow-hidden rounded-3xl border shadow-sm sm:h-[380px]">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full bg-brand-green/15 blur-3xl"
+        className="bg-brand-green/15 pointer-events-none absolute -top-24 -right-24 size-64 rounded-full blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full bg-brand-navy/15 blur-3xl"
+        className="bg-brand-navy/15 pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full blur-3xl"
       />
       <WebGLErrorBoundary fallback={<HeroFallbackGraphic />}>
         <HeroSceneCanvas onWebGLError={() => setWebglLost(true)} />
       </WebGLErrorBoundary>
-      <div className="pointer-events-none absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-xl border bg-card/90 px-4 py-2.5 text-xs backdrop-blur">
-        <span className="font-heading font-semibold text-foreground">
+      <div className="bg-card/90 pointer-events-none absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs backdrop-blur">
+        <span className="font-heading text-foreground font-semibold">
           ELEVANTE 3D &amp; Web Studio
         </span>
         <span className="text-muted-foreground">Interactive WebGL</span>

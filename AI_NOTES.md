@@ -16,6 +16,7 @@
   - `@supabase/ssr`: `0.12.7`, `@supabase/supabase-js`: `2.119.2`
   - `zod`: `4.6.7`, `server-only`: `0.0.1`
   - Phase 2 Packages: `motion` `14.14.0`, `react-hook-form` `7.92.0`, `@hookform/resolvers` `7.0.9`, `three` `0.187.0`, `@react-three/fiber` `9.8.2`
+  - Phase 3 Packages: `resend` (latest installed)
 - **Preserved Brand Assets & Runtime Paths:**
   - `Logo.png` (`818×613`) -> `/logos/Logo.png`
   - `Horizontal-E-Logo.png` (`2110×527`) -> `/logos/Horizontal-E-Logo.png`
@@ -49,11 +50,13 @@
 
 ---
 
-## 4. Key Code Locations (Phase 1 & Phase 2)
+## 4. Key Code Locations (Phases 1–3)
 - Env & Brand Config: `src/config/env.ts`, `src/config/site.ts`, `.env.example`
-- Supabase Clients: `src/lib/supabase/{client.ts,server.ts,admin.ts}`
+- Supabase Clients & Types: `src/lib/supabase/{client.ts,server.ts,admin.ts}`, `src/types/database.ts`
+- Migrations & Seed: `supabase/migrations/{202611250001_init_schema.sql,202611250002_rls_and_functions.sql,202611250003_storage_buckets.sql}`, `supabase/seed.sql`, `supabase/config.toml`
+- Security, Rate Limit & Email: `src/lib/security/{ip.ts,rate-limit.ts}`, `src/lib/email/{templates.ts,resend.ts}`, `src/lib/services/enquiry.service.ts`
 - Error & Action Envelope: `src/types/action.ts`, `src/lib/utils/errors.ts`
-- Global Boundaries & Health: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/{health,contact}/route.ts`
+- Global Boundaries & APIs: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/{health,contact}/route.ts`
 - Brand UI Primitives: `src/components/common/{BrandLogo.tsx,StatusIllustration.tsx,EmptyState.tsx}`
 - Public Marketing Shell & Pages: `src/app/(marketing)/`, `src/components/layout/{Navbar.tsx,Footer.tsx}`, `src/components/marketing/`
 - Content & SEO: `src/lib/content/public-defaults.ts`, `src/lib/validations/enquiry.ts`, `src/lib/seo/metadata.ts`, `src/app/{sitemap.ts,robots.ts}`
