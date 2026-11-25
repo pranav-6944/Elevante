@@ -64,3 +64,23 @@ export async function requireRoleOrRedirect(
   return profile;
 }
 
+export async function requirePermissionOrRedirect(
+  permissionCode: string,
+  options?: { nextPath?: string; unauthorizedRedirect?: string }
+): Promise<AuthProfile> {
+  const profile = await requireAuthOrRedirect(options?.nextPath ?? "/admin");
+  if (profile.role === "super_admin") {
+    return profile;
+  }
+
+  const supabase = await createClient();
+  const { data: allowed, error } = await supabase.rpc("user_has_permission", {
+    perm_code: permissionCode,
+  });
+
+  if (error || !allowed) {
+    redirect(options?.unauthorizedRedirect ?? "/dashboard");
+  }
+
+  return profile;
+}

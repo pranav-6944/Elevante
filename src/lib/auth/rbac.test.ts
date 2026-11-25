@@ -26,4 +26,3 @@ test("RBAC role helpers enforce customer vs staff vs admin vs super_admin bounda
   assert.equal(getDefaultHomeForRole("staff"), "/admin");
   assert.equal(getDefaultHomeForRole("super_admin"), "/admin");
 });
-

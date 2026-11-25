@@ -11,4 +11,3 @@ test("sanitizeRedirectPath permits safe relative paths and blocks open redirects
   assert.equal(sanitizeRedirectPath("/\\evil.example"), "/dashboard");
   assert.equal(sanitizeRedirectPath("/api/auth/callback?code=123"), "/dashboard");
 });
-

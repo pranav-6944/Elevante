@@ -11,6 +11,12 @@ import {
   WORKFLOW_STAGES,
 } from "@/lib/content/public-defaults";
 import { buildMetadata, serializeJsonLd } from "@/lib/seo/metadata";
+import {
+  formatMoneyMinor,
+  getPublishedFaqs,
+  getPublishedServices,
+  getPublishedSiteSection,
+} from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
@@ -20,7 +26,7 @@ import { Reveal } from "@/components/marketing/MotionWrapper";
 import { SectionHeader } from "@/components/marketing/SectionHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const metadata = buildMetadata({
   title: `${BRAND.name} — Digital Solutions Agency`,
@@ -28,8 +34,28 @@ export const metadata = buildMetadata({
   path: "/",
 });
 
-export default function HomePage() {
+export default async function HomePage() {
   const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
+  const [heroSection, introSection, publishedServices, publishedFaqs] = await Promise.all([
+    getPublishedSiteSection("home", "hero"),
+    getPublishedSiteSection("home", "intro"),
+    getPublishedServices(),
+    getPublishedFaqs(),
+  ]);
+
+  const featuredServices = publishedServices.filter((s) => s.isFeatured).slice(0, 3);
+  const previewServices =
+    featuredServices.length > 0 ? featuredServices : publishedServices.slice(0, 3);
+
+  const previewFaqs =
+    publishedFaqs.length > 0
+      ? publishedFaqs.slice(0, 4).map((f) => ({
+          id: f.id,
+          category: "Workflow & Quotations" as const,
+          question: f.question,
+          answer: f.answer,
+        }))
+      : PUBLIC_FAQS.slice(0, 4);
 
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -62,14 +88,19 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Digital solutions built for{" "}
-              <span className="text-brand-gradient">measurable business elevation.</span>
+              {heroSection?.title ? (
+                heroSection.title
+              ) : (
+                <>
+                  Digital solutions built for{" "}
+                  <span className="text-brand-gradient">measurable business elevation.</span>
+                </>
+              )}
             </h1>
 
             <p className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
-              ELEVANTE partners with founders and growing organizations to ship production websites,
-              interactive 3D web experiences, full-stack applications, data automation, AI
-              workflows, and strategic brand design.
+              {heroSection?.subtitle ||
+                "ELEVANTE partners with founders and growing organizations to ship production websites, interactive 3D web experiences, full-stack applications, data automation, AI workflows, and strategic brand design."}
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -113,12 +144,12 @@ export default function HomePage() {
                 About ELEVANTE
               </p>
               <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
-                One integrated agency for product engineering, data intelligence, and brand clarity.
+                {introSection?.title ||
+                  "One integrated agency for product engineering, data intelligence, and brand clarity."}
               </h2>
               <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                Instead of splitting strategy across disconnected freelancers, ELEVANTE brings
-                full-stack software engineering, automation pipelines, AI integration, and visual
-                brand systems together under a single structured delivery workflow.
+                {introSection?.subtitle ||
+                  "Instead of splitting strategy across disconnected freelancers, ELEVANTE brings full-stack software engineering, automation pipelines, AI integration, and visual brand systems together under a single structured delivery workflow."}
               </p>
               <div className="pt-1">
                 <Button asChild variant="link" className="text-secondary px-0">
@@ -164,13 +195,43 @@ export default function HomePage() {
               <Link href="/services">View Service Catalog</Link>
             </Button>
           </div>
+
+          {previewServices.length > 0 ? (
+            <div className="grid gap-5 md:grid-cols-3">
+              {previewServices.map((svc) => {
+                const price = formatMoneyMinor(svc.startingPriceMinor, svc.currency);
+                return (
+                  <Card key={svc.id} className="bg-card flex flex-col justify-between">
+                    <CardHeader className="space-y-2">
+                      <Badge variant="outline" className="text-secondary w-fit text-[11px]">
+                        {svc.categoryName}
+                      </Badge>
+                      <CardTitle className="text-xl">{svc.title}</CardTitle>
+                      <CardDescription>{svc.shortDescription}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-between border-t pt-4">
+                      <span className="text-xs font-semibold">
+                        {svc.pricingMode === "quote_only" || !price
+                          ? "Custom Quote"
+                          : `From ${price}`}
+                      </span>
+                      <Button asChild size="sm" variant="ghost">
+                        <Link href={`/services/${svc.slug}`}>Explore</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : null}
+
           <Reveal>
             <CapabilitiesGrid items={CAPABILITIES} />
           </Reveal>
         </div>
       </section>
 
-      {/* 4. Featured Portfolio Projects (DB-Ready Slot) */}
+      {/* 4. Featured Portfolio Projects (DB-Ready Slot until Phase 7) */}
       <section className="mx-auto max-w-6xl space-y-8 px-6 py-16 sm:py-20">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeader
@@ -183,8 +244,8 @@ export default function HomePage() {
           </Button>
         </div>
         <EmptyState
-          title="Portfolio Case Studies Connect in Phase 3 & Phase 7"
-          description="ELEVANTE never publishes fabricated demo projects. Live case studies, outcomes, and interactive previews will render directly from the database once CMS publishing is enabled."
+          title="Portfolio Case Studies Connect in Phase 7"
+          description="ELEVANTE never publishes fabricated demo projects. Live case studies, outcomes, and interactive previews will render directly from the database once Portfolio Management is active."
           action={
             <Button asChild className="bg-brand-gradient text-white hover:opacity-95">
               <Link href="/contact">Request Relevant Work Samples</Link>
@@ -280,7 +341,7 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      {/* 9. Testimonials (DB-Ready Slot) */}
+      {/* 9. Testimonials (DB-Ready Slot until Phase 7) */}
       <section className="bg-card/45 border-y py-16">
         <div className="mx-auto max-w-6xl space-y-8 px-6">
           <SectionHeader
@@ -289,8 +350,8 @@ export default function HomePage() {
             description="Authentic client feedback is curated and published solely from verified project records."
           />
           <EmptyState
-            title="Verified Client Reviews Connect via CMS"
-            description="In compliance with ELEVANTE's accuracy policy, no synthetic or placeholder reviews are shown. Published client testimonials will appear here once Phase 3 & Phase 7 CMS tables are active."
+            title="Verified Client Reviews Connect in Phase 7"
+            description="In compliance with ELEVANTE's accuracy policy, no synthetic or placeholder reviews are shown. Published client testimonials will appear here once CMS records are added."
           />
         </div>
       </section>
@@ -307,7 +368,7 @@ export default function HomePage() {
             <Link href="/faq">View All FAQs</Link>
           </Button>
         </div>
-        <FaqAccordion items={PUBLIC_FAQS.slice(0, 4)} />
+        <FaqAccordion items={previewFaqs} />
       </section>
 
       {/* 11. Final Contact CTA */}

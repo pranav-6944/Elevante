@@ -4,13 +4,35 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 4 — Authentication and Authorization` (**Completed**)
-- **Next Recommended Phase:** `Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring` *(awaiting explicit user approval)*
-- **Next Recommended Action:** Build Admin Category & Service management, Dynamic Service-Specific Form Builder, reusable `<DynamicServiceForm />` with dynamic Zod validation, CMS section/media management, and wire live `/services`, `/services/[slug]`, and `/faq` queries.
+- **Current Phase:** `Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring` (**Completed**)
+- **Next Recommended Phase:** `Phase 6 — Customer Portal` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Build the customer dashboard overview, `/dashboard/projects/new` wired to `<DynamicServiceForm />` and private `project-attachments` uploads, `/dashboard/projects`, `/dashboard/projects/[id]`, `/dashboard/files`, and `/dashboard/notifications` with strict customer isolation.
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 5: Dynamic Services, Form Builder, and Public CMS Wiring
+- **Completed Work:**
+  - Added cookie-free stateless Supabase public read client (`src/lib/supabase/public.ts`) so `'use cache'` + `cacheTag()` public reads comply with Next.js 16 `cacheComponents: true`, extracted pure currency formatting (`src/lib/utils/format.ts`) for client/server reuse, and updated `src/lib/auth/session.ts` + `src/lib/auth/guards.ts` (`requirePermissionOrRedirect`) for Suspense-wrapped admin pages.
+  - Built validation schemas for categories, services, form fields, FAQs, and CMS site sections (`src/lib/validations/services.ts`) plus dynamic Zod schema builder & strict server-side brief validator covering all 11 `form_field_type` variants (`src/lib/validations/dynamic-form.ts`).
+  - Built `recordAuditLog()` (`src/lib/services/audit.service.ts`), cached public & admin catalog/CMS queries (`src/lib/services/catalog.service.ts`), and permission-checked Server Actions (`src/actions/catalog.actions.ts`, `src/actions/cms.actions.ts`) using `updateTag` + `revalidatePath`, plus `/api/admin/media` for authenticated `public-media` image/video/SVG uploads (`revalidateTag("cms", "max")`).
+  - Built Admin workspaces (`/admin/categories`, `/admin/services`, `/admin/services/new`, `/admin/services/[id]`, `/admin/services/[id]/form`, `/admin/content`, `/admin/media`) and interactive UI managers including drag-free form field reordering and live `<DynamicServiceForm />` preview.
+  - Wired `/`, `/services`, `/services/[slug]`, `/faq`, and `/sitemap.xml` to live cached Supabase queries with clean fallbacks when unconfigured or empty (zero fabricated testimonials, pricing, or case studies).
+- **Files Created / Modified:**
+  - Core & Validations: `src/lib/supabase/public.ts`, `src/lib/utils/format.ts`, `src/lib/auth/{session.ts,guards.ts}`, `src/lib/validations/{services.ts,dynamic-form.ts,dynamic-form.test.ts}`
+  - Services, Actions & API: `src/lib/services/{audit.service.ts,catalog.service.ts}`, `src/actions/{catalog.actions.ts,cms.actions.ts}`, `src/app/api/admin/media/route.ts`
+  - UI & Admin Pages: `src/components/ui/{select,switch,tabs}.tsx`, `src/components/services/{DynamicServiceForm,ServiceCatalogExplorer}.tsx`, `src/components/admin/{CategoriesManager,ServicesManager,ServiceEditor,FormBuilderClient,CmsManagerClient,MediaManagerClient}.tsx`, `src/app/admin/{layout.tsx,page.tsx,categories/page.tsx,services/page.tsx,services/new/page.tsx,services/[id]/page.tsx,services/[id]/form/page.tsx,content/page.tsx,media/page.tsx}`
+  - Public Routes & Docs: `src/app/(marketing)/{page.tsx,services/page.tsx,services/[slug]/page.tsx,faq/page.tsx}`, `src/app/sitemap.ts`, `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check`, `npm test` (`13/13`), `npm run typecheck`, `npm run lint`, and `npm run build` (`33/33` routes) passed cleanly.
+  - Live `next start` verified `200` on `/`, `/services`, `/services/web-development`, `/faq`, `/sitemap.xml`; `307` login redirects on `/admin/categories`, `/admin/services`, `/admin/services/new`, `/admin/content`, `/admin/media`; `401` JSON on unauthenticated `POST /api/admin/media`; and `0` static bundle secret leaks.
+- **Unresolved / Deferred Setup:**
+  - Live end-to-end DB CRUD verification (creating/publishing services, form field persistence, Storage uploads, instant tag revalidation against PostgreSQL) awaits `.env.local` Supabase credentials and migrated schema.
+- **Pending Tasks:**
+  - Await explicit user approval for **Phase 6 — Customer Portal**.
+
+---
 
 ### 2026-11-25 — Phase 4: Authentication & Authorization
 - **Completed Work:**

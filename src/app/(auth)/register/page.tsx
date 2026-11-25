@@ -11,4 +11,3 @@ export const metadata = buildMetadata({
 export default function RegisterPage() {
   return <RegisterForm />;
 }
-

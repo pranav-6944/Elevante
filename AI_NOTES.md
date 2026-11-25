@@ -29,6 +29,8 @@
 - **`src/proxy.ts` replaces `src/middleware.ts`:** Export `proxy(request: NextRequest)`. Do not create both files.
 - **`error.tsx` & `global-error.tsx`:** Props signature in Next.js 16 docs is `{ error: unknown; retry: () => void }` (not `reset`).
 - **`cacheComponents: true` & `partialPrefetching: true`:** Components reading `cookies()`, `headers()`, or dynamic runtime data must sit inside `<Suspense>` (or use `'use cache: private'` / `'use cache'` + `cacheTag()`).
+- **Stateless Public Reads & Cache Invalidation (Next.js 16):** `'use cache'` + `cacheTag()` functions must NOT touch `cookies()`, so use `src/lib/supabase/public.ts` (`createPublicDataClient()`). Invalidate tags with `updateTag(tag)` inside Server Actions and `revalidateTag(tag, "max")` inside Route Handlers.
+- **Client/Server Shared Utilities:** Keep pure helpers (like `formatMoneyMinor` in `src/lib/utils/format.ts`) outside `server-only` / `next/cache` files so Client Components never pull server internals into the client bundle.
 - **`turbopack.root: process.cwd()`:** Explicitly set in `next.config.ts` to prevent Next.js from picking up parent lockfiles outside the repository.
 - **`tsconfig.json`:** `"allowImportingTsExtensions": true` enabled alongside `"noEmit": true` so `node --test --experimental-strip-types src/**/*.test.ts` works with zero extra test runner packages.
 
@@ -62,3 +64,4 @@
 - Brand UI Primitives: `src/components/common/{BrandLogo.tsx,StatusIllustration.tsx,EmptyState.tsx}`
 - Public Marketing Shell & Pages: `src/app/(marketing)/`, `src/components/layout/{Navbar.tsx,Footer.tsx}`, `src/components/marketing/`
 - Content & SEO: `src/lib/content/public-defaults.ts`, `src/lib/validations/enquiry.ts`, `src/lib/seo/metadata.ts`, `src/app/{sitemap.ts,robots.ts}`
+- Phase 5 Catalog, Form Builder & CMS: `src/lib/supabase/public.ts`, `src/lib/utils/format.ts`, `src/lib/validations/{services.ts,dynamic-form.ts}`, `src/lib/services/{audit.service.ts,catalog.service.ts}`, `src/actions/{catalog.actions.ts,cms.actions.ts}`, `src/app/api/admin/media/route.ts`, `src/components/services/{DynamicServiceForm,ServiceCatalogExplorer}.tsx`, `src/components/admin/`, `src/app/admin/{categories,services,content,media}/`

@@ -177,10 +177,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 5 Start)
+## Recommended Exact Next Task (Phase 6 Start)
 
-When **Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring** is approved:
-1. Build Admin Category & Service management (`/admin/categories`, `/admin/services`) with publish/unpublish, reorder, soft-delete, deliverables, pricing modes, and SEO fields.
-2. Build Dynamic Service-Specific Form Builder (`/admin/services/[id]/form`) and reusable `<DynamicServiceForm />` with dynamic server-side Zod validation.
-3. Build initial CMS Content & Media management (`/admin/content`, `/admin/media`) and wire public `/services`, `/services/[slug]`, and `/faq` directly to live Supabase PostgreSQL with tag revalidation.
+When **Phase 6 — Customer Portal** is approved:
+1. Build the Customer Dashboard overview (`/dashboard`) with live project counts, recent updates, and quick actions backed by customer-scoped queries.
+2. Build "Start a Project" (`/dashboard/projects/new?service=...`) integrating `<DynamicServiceForm />`, server-side `validateDynamicBriefSubmission`, immutable `form_snapshot` + `project_form_responses` persistence, and private `project-attachments` file upload validation/signed URLs.
+3. Build My Projects (`/dashboard/projects`), Project Details (`/dashboard/projects/[id]`), My Files (`/dashboard/files`), and Notifications (`/dashboard/notifications`) with strict tenant ownership enforcement.
 

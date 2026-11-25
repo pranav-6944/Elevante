@@ -32,4 +32,3 @@ test("auth schemas enforce password complexity and confirmation matching", () =>
   });
   assert.equal(validLogin.success, true);
 });
-

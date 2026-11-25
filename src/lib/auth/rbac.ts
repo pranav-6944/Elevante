@@ -25,4 +25,3 @@ export function hasAllowedRole(
 export function getDefaultHomeForRole(role: UserRole | null | undefined): string {
   return isAdminPanelRole(role) ? "/admin" : "/dashboard";
 }
-

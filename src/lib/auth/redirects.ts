@@ -26,4 +26,3 @@ export function sanitizeRedirectPath(
     return fallback;
   }
 }
-

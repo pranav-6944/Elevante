@@ -1,5 +1,6 @@
 import "server-only";
 import type { User } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
 import { isSupabaseConfigured } from "@/config/env";
 import { createClient } from "@/lib/supabase/server";
 import type { UserRole } from "@/types";
@@ -19,6 +20,7 @@ export interface AuthProfile {
 }
 
 export async function getCurrentUser(): Promise<User | null> {
+  await cookies();
   if (!isSupabaseConfigured()) {
     return null;
   }
@@ -37,6 +39,7 @@ export async function getCurrentUser(): Promise<User | null> {
 }
 
 export async function getCurrentAuthProfile(): Promise<AuthProfile | null> {
+  await cookies();
   if (!isSupabaseConfigured()) {
     return null;
   }
@@ -87,4 +90,3 @@ export async function getCurrentAuthProfile(): Promise<AuthProfile | null> {
     createdAt: profile.created_at,
   };
 }
-
