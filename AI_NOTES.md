@@ -6,20 +6,35 @@
 
 ## 1. Environment & Repository Snapshot (Verified 2026-11-25)
 - **Root Path:** `c:\Users\prana_b2roblq\Downloads\Main Projects\Elevante`
-- **Toolchain:** Node `v22.18.0`, npm `10.9.3`, Git `2.49.0.windows.1`
-- **Git State:** Fresh local repository initialized (`git init -b main`); old dirty history removed; no remote linked yet. Preserved files:
-  - `ProjectBrief.md`
-  - `Logo.png` (`818×613`)
-  - `Horizontal-E-Logo.png` (`2110×527`)
-  - `Vertical-E-Logo.png` (`1296×929`)
-  - `favicon_io/` (`android-chrome-192x192.png`, `android-chrome-512x512.png`, `apple-touch-icon.png`, `favicon-16x16.png`, `favicon-32x32.png`, `favicon.ico`, `site.webmanifest`)
-- **Action Reminder for Phase 1:** Preserve `ProjectBrief.md`, Phase 0 docs, logos, and `favicon_io/` when initializing Next.js, move brand assets into `public/`, and attach new GitHub remote when provided.
+- **Toolchain:** Node `v22.18.0`, npm `10.9.3`, Git `2.49.0.windows.1`, Python `3.13.6`
+- **Git Remote:** `origin` -> `https://github.com/pranav-6944/Elevante.git` (`main` branch, rebased over initial `LICENSE` commit `81d3c74`)
+- **Installed Stack Versions (Phase 1):**
+  - `next`: `16.4.6` (App Router, Turbopack, `cacheComponents: true`, `partialPrefetching: true`)
+  - `react` / `react-dom`: `19.3.0`
+  - `tailwindcss`: `4.3.3` + `@tailwindcss/turbopack` `4.3.3`
+  - `shadcn`: `4.23.0` (`radix-nova` preset, `radix-ui` `1.8.1`, `lucide-react` `1.79.0`)
+  - `@supabase/ssr`: `0.12.7`, `@supabase/supabase-js`: `2.119.2`
+  - `zod`: `4.6.7`, `server-only`: `0.0.1`
+- **Preserved Brand Assets & Runtime Paths:**
+  - `Logo.png` (`818×613`) -> `/logos/Logo.png`
+  - `Horizontal-E-Logo.png` (`2110×527`) -> `/logos/Horizontal-E-Logo.png`
+  - `Vertical-E-Logo.png` (`1296×929`) -> `/logos/Vertical-E-Logo.png`
+  - `favicon_io/*` -> `public/` (`favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`, `android-chrome-512x512.png`, updated `site.webmanifest`)
 
 ---
 
-## 2. `ProjectBrief.md` Key Reference Map (405 Lines)
+## 2. Next.js 16.4.6 Specific Gotchas (`node_modules/next/dist/docs/`)
+- **`src/proxy.ts` replaces `src/middleware.ts`:** Export `proxy(request: NextRequest)`. Do not create both files.
+- **`error.tsx` & `global-error.tsx`:** Props signature in Next.js 16 docs is `{ error: unknown; retry: () => void }` (not `reset`).
+- **`cacheComponents: true` & `partialPrefetching: true`:** Components reading `cookies()`, `headers()`, or dynamic runtime data must sit inside `<Suspense>` (or use `'use cache: private'` / `'use cache'` + `cacheTag()`).
+- **`turbopack.root: process.cwd()`:** Explicitly set in `next.config.ts` to prevent Next.js from picking up parent lockfiles outside the repository.
+- **`tsconfig.json`:** `"allowImportingTsExtensions": true` enabled alongside `"noEmit": true` so `node --test --experimental-strip-types src/**/*.test.ts` works with zero extra test runner packages.
+
+---
+
+## 3. `ProjectBrief.md` Key Reference Map (405 Lines)
 - **Lines 1–8:** Agency intro, founders (**Pranav Lamkhade**, **Omkar Sable**), 9 core service domains, production scale goal.
-- **Lines 10–26:** Tech stack (Next.js App Router, React, TS, Tailwind, shadcn/ui, Motion for React, Three.js/R3F selective, Server Actions + Route Handlers, Supabase PG/Auth/Storage, Zod + RHF, Resend, Lucide + custom SVG, Vercel, Git/GitHub).
+- **Lines 10–26:** Tech stack (Next.js, Tailwind, shadcn/ui, Motion for React, Three.js/R3F selective, Server Actions/Route Handlers, Supabase PG/Auth/Storage, Zod+RHF, Resend, Lucide+custom SVG, Vercel).
 - **Lines 28–43:** Brand colors (`linear-gradient(100deg, #17264F 0%, #245B70 52%, #319C78 100%)`, `#17264F`, `#245B70`, `#319C78`, `#F5F6F2`, `#FFFFFF`).
 - **Lines 45–77:** Public website sections & 9 public page types.
 - **Lines 79–94:** Dynamic Service Catalog & Service-Specific Form Builder.
@@ -30,19 +45,12 @@
 - **Lines 195–227:** SEO, AEO, GEO requirements (no misleading schema/fake reviews).
 - **Lines 228–270:** Security, Reliability, Scalability, Performance rules.
 - **Lines 271–379:** Target `src/`, `supabase/`, and `public/` folder architecture.
-- **Lines 381–405:** Strict development prohibitions (no hardcoded mock services/auth/payments).
 
 ---
 
-## 3. Core Architectural Keywords & Conventions
-- **Action Result Pattern:** `ActionResult<T>` discriminated union (`ok: true | false`).
-- **Storage Buckets:** `public-media` (public), `project-attachments` (private signed URL), `project-deliverables` (private signed URL).
-- **RBAC Roles:** `customer`, `staff`, `admin`, `super_admin` + `permissions` / `role_permissions`.
-- **Snapshot Rule:** `project_requests.form_schema_snapshot` + `project_form_responses` preserve submitted labels/types independently of future `service_form_fields` edits.
-- **Internal Notes Security:** `project_messages.is_internal_note = true` must always be filtered out by RLS for customers.
-- **Skills to Apply in Upcoming Phases:**
-  - `ponytail` (coding/debugging/refactoring simplicity)
-  - `ui-ux-pro-max` (design system & UI/UX polish in Phases 1–2+)
-  - `security-audit` (Phase 3/4/8/9 security verification)
-  - `context7` (up-to-date Next.js, Supabase, shadcn/ui, RHF, Zod, Motion, R3F docs)
-
+## 4. Key Phase 1 Code Locations
+- Env & Brand Config: `src/config/env.ts`, `src/config/site.ts`, `.env.example`
+- Supabase Clients: `src/lib/supabase/{client.ts,server.ts,admin.ts}`
+- Error & Action Envelope: `src/types/action.ts`, `src/lib/utils/errors.ts`
+- Global Boundaries & Health: `src/app/{not-found.tsx,error.tsx,global-error.tsx,loading.tsx}`, `src/app/api/health/route.ts`
+- Brand UI Primitives: `src/components/common/{BrandLogo.tsx,StatusIllustration.tsx,EmptyState.tsx}`

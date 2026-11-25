@@ -1,0 +1,21 @@
+{
+  "name": "ELEVANTE",
+  "short_name": "ELEVANTE",
+  "description": "Digital solutions agency platform for web development, 3D web experiences, AI, analytics, and branding.",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#17264F",
+  "background_color": "#F5F6F2",
+  "display": "standalone"
+}

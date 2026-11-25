@@ -33,18 +33,18 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Phase 1 — Project Foundation
+## Phase 1 — Project Foundation *(Completed)*
 - **Prerequisites:** Phase 0 approved; fresh Git `main` branch initialized and clean (brand logos and `favicon_io/` preserved).
 - **Features & Scope:**
-  - Initialize Next.js (App Router) with strict TypeScript, ESLint, Prettier/formatting rules.
-  - Configure Tailwind CSS, `shadcn/ui`, `lucide-react`, and official Elevante design tokens (`#17264F`, `#245B70`, `#319C78`, `#F5F6F2`, `#FFFFFF`, primary `100deg` gradient).
-  - Organize official logos (`Logo.png`, `Horizontal-E-Logo.png`, `Vertical-E-Logo.png`) and `favicon_io/*` in `public/`, updating `site.webmanifest`.
-  - Establish folder structure (`src/app`, `src/components`, `src/lib`, `src/types`, `src/config`, `supabase/`).
-  - Configure typed environment validation (`src/config/env.ts`) and Supabase client helpers (`client.ts`, `server.ts`, `admin.ts` guarded by `server-only`).
-  - Implement centralized `ActionResult<T>`, custom `404`/`500`/error boundary pages, and baseline security headers in `next.config.ts`.
+  - Initialized Next.js `16.4.6` (App Router, Turbopack, `cacheComponents: true`) with strict TypeScript, ESLint, Prettier (`prettier-plugin-tailwindcss`), and `node --test` checks.
+  - Configured Tailwind CSS v4, `shadcn/ui` (Radix `nova` preset), `lucide-react`, `Outfit`/`Work Sans`/`JetBrains Mono` fonts, and official Elevante design tokens (`#17264F`, `#245B70`, `#319C78`, `#F5F6F2`, `#FFFFFF`, primary `100deg` gradient).
+  - Organized official logos (`Logo.png`, `Horizontal-E-Logo.png`, `Vertical-E-Logo.png`) into `public/logos/` and `favicon_io/*` into `public/`, updating `public/site.webmanifest`.
+  - Established folder structure (`src/app`, `src/components`, `src/lib`, `src/types`, `src/config`, `supabase/migrations`).
+  - Configured typed environment validation (`src/config/env.ts`, `.env.example`) and Supabase client helpers (`client.ts`, `server.ts`, `admin.ts` guarded by `server-only`).
+  - Implemented centralized `ActionResult<T>` (`src/types/action.ts`, `src/lib/utils/errors.ts`), custom `not-found.tsx`/`error.tsx`/`global-error.tsx`/`loading.tsx`, reusable `BrandLogo`/`EmptyState`/`StatusIllustration`, `/api/health`, and HTTP security headers in `next.config.ts`.
 - **Testing & Security Requirements:**
-  - `npm run lint`, `npx tsc --noEmit`, `npm run build` pass cleanly.
-  - Verify zero secret env vars leak into client bundle (`NEXT_PUBLIC_*` audit).
+  - `npm run format:check`, `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` pass cleanly.
+  - Verified zero server-only secret names (`SUPABASE_SERVICE_ROLE_KEY`, `RESEND_API_KEY`) leak into `.next/static/*.js`.
 
 ---
 
@@ -83,7 +83,7 @@ Phase 0 (Analysis & Docs)
 - **Prerequisites:** Phase 3 complete.
 - **Features & Scope:**
   - Auth UI & flows: `/register`, `/login`, `/verify-email`, `/forgot-password`, `/reset-password`, and `/api/auth/callback` (PKCE).
-  - `src/middleware.ts` session refresh and unauthenticated redirects for `/dashboard/*` and `/admin/*`.
+  - `src/proxy.ts` (Next.js 16 convention replacing `middleware.ts`) session refresh and unauthenticated redirects for `/dashboard/*` and `/admin/*`.
   - Server-side auth & RBAC guards (`requireUser()`, `requireRole()`, `requirePermission()`).
   - Admin access bootstrap / role verification mechanism (`super_admin`, `admin`, `staff`, `customer`).
   - Account profile view & password update foundation.
@@ -183,10 +183,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact First Implementation Task (Phase 1 Start)
+## Recommended Exact Next Task (Phase 2 Start)
 
-When **Phase 1** is approved:
-1. **Initialize Next.js + TypeScript + Tailwind + `shadcn/ui`** cleanly without overwriting `ProjectBrief.md`, Phase 0 docs, root logos, or `favicon_io/`.
-2. **Organize Brand Assets & Design Tokens:** Integrate `Logo.png`, `Horizontal-E-Logo.png`, `Vertical-E-Logo.png`, and `favicon_io/` into `public/`, update `site.webmanifest`, and configure Elevante's design tokens, error boundaries, and folder structure.
-3. **Connect New GitHub Remote (When Ready):** Attach the new GitHub repository remote to push clean Phase 1+ commits.
+When **Phase 2 — Brand Identity and Public Website** is approved:
+1. Build responsive public header (`Navbar` with mobile drawer + `BrandLogo`), `Footer`, and landing page marketing structure in `src/app/(marketing)/` (Hero, Agency Intro, Capabilities, How It Works, Why Elevante, Founders Pranav Lamkhade & Omkar Sable, DB-ready slots for Services/Portfolio/Testimonials/FAQs).
+2. Add Motion transitions and optional lazy-loaded R3F 3D accent with `prefers-reduced-motion` and SVG fallback.
+3. Build `/about`, `/contact` UI (Zod form), `/privacy-policy`, `/terms`, and SEO metadata foundations.
 
