@@ -94,7 +94,7 @@ export default async function HomePage() {
       />
 
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden border-b bg-[#f3f6f4] py-12 sm:py-16 lg:py-20">
+      <section className="relative overflow-hidden border-b bg-[#f3f6f4] py-10 sm:py-16 lg:py-20">
         {/* Atmospheric light-to-studio-teal backdrop blending left copy cleanly into right studio visual */}
         <div
           aria-hidden="true"
@@ -109,10 +109,10 @@ export default async function HomePage() {
           className="pointer-events-none absolute top-1/2 right-[-6%] hidden size-[680px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,156,120,0.22)_0%,rgba(18,59,63,0.2)_45%,transparent_72%)] blur-3xl lg:block"
         />
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 lg:grid-cols-[1.02fr_1.06fr] lg:gap-8">
-          <div className="space-y-6">
-            <div className="bg-card text-secondary inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-xs">
-              <Sparkles className="text-brand-green size-3.5" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-6xl items-center gap-8 px-4 sm:gap-10 sm:px-6 lg:grid-cols-[1.02fr_1.06fr] lg:gap-8">
+          <div className="space-y-5 sm:space-y-6">
+            <div className="bg-card text-secondary inline-flex max-w-full items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-medium shadow-xs sm:px-3.5 sm:text-xs">
+              <Sparkles className="text-brand-green size-3.5 shrink-0" aria-hidden="true" />
               <ScrambleText
                 text="Digital Engineering, AI, Analytics & Brand Design"
                 trigger="mount"
@@ -121,7 +121,7 @@ export default async function HomePage() {
               />
             </div>
 
-            <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+            <h1 className="text-foreground text-[1.875rem] leading-[1.12] font-bold tracking-tight sm:text-5xl lg:text-6xl">
               {heroSection?.title ? (
                 heroSection.title
               ) : (
@@ -132,24 +132,26 @@ export default async function HomePage() {
               )}
             </h1>
 
-            <p className="text-muted-foreground max-w-2xl text-base leading-relaxed sm:text-lg">
+            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed sm:text-lg">
               {heroSection?.subtitle ||
                 "ELEVANTE partners with founders and growing organizations to ship production websites, interactive 3D web experiences, full-stack applications, data automation, AI workflows, and strategic brand design."}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div className="grid grid-cols-1 gap-3 pt-1 sm:flex sm:flex-wrap sm:items-center">
               <Button
                 asChild
                 size="lg"
-                className="bg-brand-gradient px-6 text-white hover:opacity-95"
+                className="bg-brand-gradient w-full px-6 text-white hover:opacity-95 sm:w-auto"
               >
-                <Link href="/contact" className="inline-flex items-center gap-2">
+                <Link href="/contact" className="inline-flex items-center justify-center gap-2">
                   <span>Start a Project</span>
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="px-6">
-                <Link href="/services">Explore Capabilities</Link>
+              <Button asChild size="lg" variant="outline" className="w-full px-6 sm:w-auto">
+                <Link href="/services" className="inline-flex items-center justify-center">
+                  Explore Capabilities
+                </Link>
               </Button>
             </div>
 
