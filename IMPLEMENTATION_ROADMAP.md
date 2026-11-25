@@ -177,10 +177,10 @@ Phase 0 (Analysis & Docs)
 
 ---
 
-## Recommended Exact Next Task (Phase 6 Start)
+## Recommended Exact Next Task (Phase 7 Start)
 
-When **Phase 6 — Customer Portal** is approved:
-1. Build the Customer Dashboard overview (`/dashboard`) with live project counts, recent updates, and quick actions backed by customer-scoped queries.
-2. Build "Start a Project" (`/dashboard/projects/new?service=...`) integrating `<DynamicServiceForm />`, server-side `validateDynamicBriefSubmission`, immutable `form_snapshot` + `project_form_responses` persistence, and private `project-attachments` file upload validation/signed URLs.
-3. Build My Projects (`/dashboard/projects`), Project Details (`/dashboard/projects/[id]`), My Files (`/dashboard/files`), and Notifications (`/dashboard/notifications`) with strict tenant ownership enforcement.
+When **Phase 7 — Admin Dashboard** is approved:
+1. Build Admin Overview (`/admin`) live operational metrics (open enquiries, active projects, pending quotes, audit events) and Enquiry triage (`/admin/enquiries`) + Customer directory (`/admin/customers`).
+2. Build Admin Project Management (`/admin/projects`), Line-Item Quotation Builder (`/admin/quotations`), and Portfolio & Testimonial Management (`/admin/portfolio`) wiring public `/portfolio`, `/portfolio/[slug]`, and landing work/testimonials to live DB records.
+3. Build Admin Team & Role Permissions (`/admin/team`), Audit Logs (`/admin/audit-logs`), Analytics (`/admin/analytics`), and Platform Settings (`/admin/settings`).
 

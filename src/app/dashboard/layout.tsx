@@ -1,54 +1,60 @@
 import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
-import { LogOut, Settings, LayoutDashboard, Shield } from "lucide-react";
+import {
+  Bell,
+  FileArchive,
+  FolderKanban,
+  LayoutDashboard,
+  LogOut,
+  PlusCircle,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { signOutAction } from "@/actions/auth.actions";
 import { requireAuthOrRedirect } from "@/lib/auth/guards";
 import { isAdminPanelRole } from "@/lib/auth/rbac";
+import { getUnreadNotificationCount } from "@/lib/services/portal.service";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const PORTAL_NAV = [
+  { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Start Project", href: "/dashboard/projects/new", icon: PlusCircle },
+  { label: "My Projects", href: "/dashboard/projects", icon: FolderKanban },
+  { label: "My Files", href: "/dashboard/files", icon: FileArchive },
+  { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+];
+
 async function DashboardShell({ children }: { children: ReactNode }) {
   const profile = await requireAuthOrRedirect("/dashboard");
+  const unreadCount = await getUnreadNotificationCount(profile.id);
 
   return (
     <div className="bg-background flex min-h-screen flex-col">
-      <header className="bg-card/90 sticky top-0 z-40 border-b backdrop-blur">
+      <header className="bg-card/95 sticky top-0 z-40 border-b backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             <Link href="/dashboard" className="inline-flex items-center">
               <BrandLogo variant="horizontal" className="h-8 w-auto" priority />
             </Link>
-            <nav
-              aria-label="Customer Portal Navigation"
-              className="hidden items-center gap-2 sm:flex"
-            >
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/dashboard" className="inline-flex items-center gap-1.5">
-                  <LayoutDashboard className="size-4" aria-hidden="true" />
-                  <span>Overview</span>
-                </Link>
-              </Button>
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/dashboard/settings" className="inline-flex items-center gap-1.5">
-                  <Settings className="size-4" aria-hidden="true" />
-                  <span>Settings</span>
-                </Link>
-              </Button>
-              {isAdminPanelRole(profile.role) ? (
-                <Button asChild variant="outline" size="sm">
-                  <Link href="/admin" className="inline-flex items-center gap-1.5">
-                    <Shield className="size-4" aria-hidden="true" />
-                    <span>Admin Panel</span>
-                  </Link>
-                </Button>
-              ) : null}
-            </nav>
+            <Badge variant="outline" className="hidden sm:inline-flex">
+              Client Portal
+            </Badge>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right text-xs sm:block">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {isAdminPanelRole(profile.role) ? (
+              <Button asChild variant="outline" size="sm">
+                <Link href="/admin" className="inline-flex items-center gap-1.5">
+                  <Shield className="size-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Admin Panel</span>
+                </Link>
+              </Button>
+            ) : null}
+            <div className="hidden text-right text-xs md:block">
               <p className="text-foreground font-semibold">{profile.fullName}</p>
               <p className="text-muted-foreground">{profile.email}</p>
             </div>
@@ -63,8 +69,31 @@ async function DashboardShell({ children }: { children: ReactNode }) {
             </form>
           </div>
         </div>
+
+        <nav aria-label="Customer Portal Navigation" className="bg-background/70 border-t">
+          <div className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-6 py-2">
+            {PORTAL_NAV.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors"
+                >
+                  <Icon className="size-3.5" aria-hidden="true" />
+                  <span>{item.label}</span>
+                  {item.href === "/dashboard/notifications" && unreadCount > 0 ? (
+                    <Badge className="bg-brand-green ml-0.5 h-4 min-w-4 px-1 text-[10px] text-white">
+                      {unreadCount}
+                    </Badge>
+                  ) : null}
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">{children}</main>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8 sm:py-10">{children}</main>
     </div>
   );
 }

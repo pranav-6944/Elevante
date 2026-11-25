@@ -61,3 +61,41 @@ export function buildEnquiryNotificationEmail(payload: EnquiryEmailPayload) {
     ].join("\n"),
   };
 }
+
+export interface ProjectSubmittedEmailPayload {
+  projectCode: string;
+  projectTitle: string;
+  serviceTitle: string;
+  customerName: string;
+  customerEmail: string;
+}
+
+export function buildProjectSubmittedEmail(payload: ProjectSubmittedEmailPayload) {
+  const safeCode = escapeHtml(payload.projectCode);
+  const safeTitle = escapeHtml(payload.projectTitle);
+  const safeService = escapeHtml(payload.serviceTitle);
+  const safeName = escapeHtml(payload.customerName);
+
+  return {
+    subject: `[ELEVANTE] Project Request Received — ${payload.projectCode}`,
+    html: `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#17264F;">
+        <div style="background:linear-gradient(100deg,#17264F 0%,#245B70 52%,#319C78 100%);padding:20px 24px;border-radius:12px 12px 0 0;color:#ffffff;">
+          <h1 style="margin:0;font-size:18px;">Project Request Submitted</h1>
+          <p style="margin:4px 0 0;font-size:12px;opacity:0.9;">Reference Code: ${safeCode}</p>
+        </div>
+        <div style="border:1px solid #d8ddd6;border-top:none;padding:24px;border-radius:0 0 12px 12px;background:#ffffff;">
+          <p>Hi ${safeName},</p>
+          <p style="line-height:1.6;">We have received your project request <strong>${safeTitle}</strong> under <strong>${safeService}</strong>.</p>
+          <p style="line-height:1.6;">Our team will review your brief and reference attachments, and update your portal status or issue a structured quotation.</p>
+        </div>
+      </div>
+    `.trim(),
+    text: [
+      `ELEVANTE Project Request Received (${payload.projectCode})`,
+      `Customer: ${payload.customerName} (${payload.customerEmail})`,
+      `Service: ${payload.serviceTitle}`,
+      `Project: ${payload.projectTitle}`,
+    ].join("\n"),
+  };
+}

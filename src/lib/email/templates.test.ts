@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { buildEnquiryNotificationEmail, escapeHtml } from "./templates.ts";
+import {
+  buildEnquiryNotificationEmail,
+  buildProjectSubmittedEmail,
+  escapeHtml,
+} from "./templates.ts";
 
 test("escapeHtml neutralizes HTML tags and quotes cleanly", () => {
   assert.equal(
@@ -22,4 +26,19 @@ test("buildEnquiryNotificationEmail escapes user fields in HTML output", () => {
   assert.ok(!email.html.includes("<img "));
   assert.ok(email.html.includes("&lt;img src=x onerror=alert(1)&gt;"));
   assert.ok(email.html.includes("Line 1<br />Line 2 &lt;b&gt;bold&lt;/b&gt;"));
+});
+
+test("buildProjectSubmittedEmail escapes customer and project fields safely", () => {
+  const email = buildProjectSubmittedEmail({
+    projectCode: "ELV-2026-0001",
+    projectTitle: "<script>bad</script> Website",
+    serviceTitle: "Web Development",
+    customerName: "Pranav & Team",
+    customerEmail: "pranav@example.com",
+  });
+
+  assert.equal(email.subject, "[ELEVANTE] Project Request Received — ELV-2026-0001");
+  assert.ok(!email.html.includes("<script>bad</script>"));
+  assert.ok(email.html.includes("&lt;script&gt;bad&lt;/script&gt; Website"));
+  assert.ok(email.html.includes("Pranav &amp; Team"));
 });

@@ -11,6 +11,8 @@ export async function recordAuditLog(params: {
   entityId?: string | null;
   oldValues?: Json | null;
   newValues?: Json | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
 }) {
   if (!isAdminSupabaseConfigured()) {
     return;
@@ -26,6 +28,8 @@ export async function recordAuditLog(params: {
       entity_id: params.entityId ?? null,
       old_values: params.oldValues ?? null,
       new_values: params.newValues ?? null,
+      ip_address: params.ipAddress ?? null,
+      user_agent: params.userAgent ? params.userAgent.slice(0, 300) : null,
     });
     if (error) {
       console.error("Failed to persist audit log:", error.message);

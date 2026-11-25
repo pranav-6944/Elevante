@@ -1,7 +1,12 @@
 import "server-only";
 import { Resend } from "resend";
 import { getServerEnv } from "@/config/env";
-import { buildEnquiryNotificationEmail, type EnquiryEmailPayload } from "./templates";
+import {
+  buildEnquiryNotificationEmail,
+  buildProjectSubmittedEmail,
+  type EnquiryEmailPayload,
+  type ProjectSubmittedEmailPayload,
+} from "./templates";
 
 let cachedResend: Resend | null = null;
 
@@ -84,4 +89,28 @@ export async function sendEnquiryNotificationEmail(
     text: content.text,
     replyTo: payload.email,
   });
+}
+
+export async function sendProjectSubmittedEmails(
+  payload: ProjectSubmittedEmailPayload
+): Promise<void> {
+  const content = buildProjectSubmittedEmail(payload);
+  const { CONTACT_NOTIFICATION_EMAIL } = getServerEnv();
+
+  await sendEmail({
+    to: payload.customerEmail,
+    subject: content.subject,
+    html: content.html,
+    text: content.text,
+  });
+
+  if (CONTACT_NOTIFICATION_EMAIL) {
+    await sendEmail({
+      to: CONTACT_NOTIFICATION_EMAIL,
+      subject: `[ELEVANTE Portal] New Project ${payload.projectCode} — ${payload.projectTitle}`,
+      html: content.html,
+      text: content.text,
+      replyTo: payload.customerEmail,
+    });
+  }
 }

@@ -251,6 +251,10 @@ export function validateDynamicBriefSubmission(
   return {
     ok: true,
     responses,
-    schemaSnapshot: activeFields,
+    schemaSnapshot: activeFields.map((field) => ({
+      ...field,
+      options: field.options.map((opt) => ({ ...opt })),
+      validationRules: { ...field.validationRules },
+    })),
   };
 }

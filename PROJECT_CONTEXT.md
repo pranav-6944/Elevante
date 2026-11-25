@@ -1,6 +1,6 @@
 # ELEVANTE — Project Context
 
-> **Current Status:** Phase 5 (Dynamic Services, Form Builder, and Public CMS Wiring) complete — awaiting explicit approval before Phase 6 implementation.  
+> **Current Status:** Phase 6 (Customer Portal) complete — awaiting explicit approval before Phase 7 implementation.  
 > **Primary Source of Truth:** [ProjectBrief.md](./ProjectBrief.md)
 
 ---
@@ -124,7 +124,7 @@ Where `ProjectBrief.md` left implementation details unspecified, the following p
 
 ## 8. Current Implementation Status
 
-- **Active Phase:** Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring (**Completed**)
-- **Application Code:** Admin Category, Service, Form Builder, CMS (`site_sections`, `faqs`), and Media (`public-media` upload + `media_assets`) routes under `/admin/*` guarded by `requirePermissionOrRedirect`, backed by permission-checked Server Actions (`src/actions/catalog.actions.ts`, `src/actions/cms.actions.ts`), `/api/admin/media`, immutable `audit_logs` writer (`src/lib/services/audit.service.ts`), dynamic Zod form validator (`src/lib/validations/dynamic-form.ts`), reusable `<DynamicServiceForm />`, and cached public service/CMS queries (`src/lib/services/catalog.service.ts`) wired into `/`, `/services`, `/services/[slug]`, `/faq`, and `/sitemap.xml`.
-- **Next Recommended Phase:** Phase 6 — Customer Portal (awaiting explicit approval)
+- **Active Phase:** Phase 6 — Customer Portal (**Completed**)
+- **Application Code:** Full Customer Portal shell (`src/app/dashboard/layout.tsx`) with unread notification badge, overview (`/dashboard`), Start a Project (`/dashboard/projects/new`) integrating `<DynamicServiceForm />` + private `project-attachments` upload, My Projects (`/dashboard/projects`), Project Details (`/dashboard/projects/[id]`) displaying immutable brief snapshots (`project_form_responses` + `form_schema_snapshot`), status timeline, files, non-draft quotations, non-internal messages, and deliverables, My Files (`/dashboard/files`), Notifications (`/dashboard/notifications`), plus authenticated project submission/upload/signed-download routes (`/api/projects`, `/api/projects/[id]/files`, `/api/projects/files/[fileId]/download`).
+- **Next Recommended Phase:** Phase 7 — Admin Dashboard (awaiting explicit approval)
 

@@ -1,10 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Paperclip } from "lucide-react";
+import { Loader2, Paperclip, X } from "lucide-react";
+import { formatFileSize } from "@/lib/utils/format";
 import { buildDynamicFormSchema, type DynamicFieldSpec } from "@/lib/validations/dynamic-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +17,11 @@ interface DynamicServiceFormProps {
   fields: DynamicFieldSpec[];
   mode?: "preview" | "submit";
   submitLabel?: string;
+  fileMap?: Record<string, File[]>;
+  onFileFieldChange?: (fieldKey: string, files: File[]) => void;
+  beforeSubmitContent?: ReactNode;
+  formError?: string | null;
+  externalSubmitting?: boolean;
   onSubmitValues?: (values: Record<string, unknown>) => Promise<void> | void;
 }
 
@@ -22,6 +29,11 @@ export function DynamicServiceForm({
   fields,
   mode = "submit",
   submitLabel = "Submit Requirements",
+  fileMap,
+  onFileFieldChange,
+  beforeSubmitContent,
+  formError,
+  externalSubmitting = false,
   onSubmitValues,
 }: DynamicServiceFormProps) {
   const activeFields = useMemo(
@@ -54,7 +66,7 @@ export function DynamicServiceForm({
     defaultValues,
   });
 
-  if (activeFields.length === 0) {
+  if (activeFields.length === 0 && !beforeSubmitContent) {
     return (
       <div className="bg-muted/30 text-muted-foreground rounded-xl border border-dashed p-6 text-center text-sm">
         No custom brief fields configured for this service yet.
@@ -69,8 +81,15 @@ export function DynamicServiceForm({
     }
   }
 
+  const busy = isSubmitting || externalSubmitting;
+
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} noValidate className="space-y-5">
+      {activeFields.length === 0 ? (
+        <div className="bg-muted/20 text-muted-foreground rounded-xl border border-dashed px-4 py-3 text-xs">
+          This service uses the standard project brief above with no additional custom fields.
+        </div>
+      ) : null}
       {activeFields.map((field) => {
         const fieldError = errors[field.fieldKey]?.message;
         const inputId = `dyn-${field.fieldKey}`;
@@ -187,14 +206,65 @@ export function DynamicServiceForm({
                 )}
               />
             ) : field.fieldType === "file" ? (
-              <div className="bg-muted/30 text-muted-foreground flex items-center gap-2 rounded-lg border border-dashed px-3 py-2.5 text-xs">
-                <Paperclip className="size-4 shrink-0" aria-hidden="true" />
-                <span>
-                  {mode === "preview"
-                    ? "Private reference file upload slot (active inside Client Portal)"
-                    : "Use the reference file uploader below to attach files for this requirement."}
-                </span>
-              </div>
+              mode === "preview" || !onFileFieldChange ? (
+                <div className="bg-muted/30 text-muted-foreground flex items-center gap-2 rounded-lg border border-dashed px-3 py-2.5 text-xs">
+                  <Paperclip className="size-4 shrink-0" aria-hidden="true" />
+                  <span>
+                    {mode === "preview"
+                      ? "Private reference file upload slot (active inside Client Portal)"
+                      : "Use the reference file uploader below to attach files for this requirement."}
+                  </span>
+                </div>
+              ) : (
+                <Controller
+                  name={field.fieldKey}
+                  control={control}
+                  render={({ field: ctrl }) => {
+                    const currentFiles = fileMap?.[field.fieldKey] ?? [];
+                    return (
+                      <div className="bg-background space-y-2.5 rounded-lg border border-dashed p-3">
+                        <Input
+                          id={inputId}
+                          type="file"
+                          multiple
+                          accept=".png,.jpg,.jpeg,.webp,.pdf,.txt,.md,.csv,.zip,.docx,.xlsx,.pptx"
+                          onChange={(e) => {
+                            const picked = Array.from(e.target.files ?? []);
+                            onFileFieldChange(field.fieldKey, picked);
+                            ctrl.onChange(picked.map((f) => f.name));
+                          }}
+                        />
+                        {currentFiles.length > 0 ? (
+                          <ul className="space-y-1 text-xs">
+                            {currentFiles.map((file, idx) => (
+                              <li
+                                key={`${file.name}-${idx}`}
+                                className="bg-muted/40 flex items-center justify-between gap-2 rounded px-2.5 py-1"
+                              >
+                                <span className="truncate font-medium">
+                                  {file.name} ({formatFileSize(file.size)})
+                                </span>
+                                <button
+                                  type="button"
+                                  aria-label={`Remove ${file.name}`}
+                                  onClick={() => {
+                                    const nextFiles = currentFiles.filter((_, i) => i !== idx);
+                                    onFileFieldChange(field.fieldKey, nextFiles);
+                                    ctrl.onChange(nextFiles.map((f) => f.name));
+                                  }}
+                                  className="text-muted-foreground hover:text-destructive"
+                                >
+                                  <X className="size-3.5" aria-hidden="true" />
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    );
+                  }}
+                />
+              )
             ) : (
               <Input
                 id={inputId}
@@ -216,9 +286,17 @@ export function DynamicServiceForm({
         );
       })}
 
+      {beforeSubmitContent}
+
+      {formError ? (
+        <Alert variant="destructive">
+          <AlertDescription>{formError}</AlertDescription>
+        </Alert>
+      ) : null}
+
       {mode === "submit" ? (
-        <Button type="submit" disabled={isSubmitting} className="bg-brand-gradient text-white">
-          {isSubmitting ? (
+        <Button type="submit" disabled={busy} className="bg-brand-gradient text-white">
+          {busy ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
               <span>Submitting...</span>

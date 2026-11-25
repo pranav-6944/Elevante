@@ -4,13 +4,35 @@
 
 ## Current Phase & Next Recommended Task
 
-- **Current Phase:** `Phase 5 — Dynamic Services, Form Builder, and Public CMS Wiring` (**Completed**)
-- **Next Recommended Phase:** `Phase 6 — Customer Portal` *(awaiting explicit user approval)*
-- **Next Recommended Action:** Build the customer dashboard overview, `/dashboard/projects/new` wired to `<DynamicServiceForm />` and private `project-attachments` uploads, `/dashboard/projects`, `/dashboard/projects/[id]`, `/dashboard/files`, and `/dashboard/notifications` with strict customer isolation.
+- **Current Phase:** `Phase 6 — Customer Portal` (**Completed**)
+- **Next Recommended Phase:** `Phase 7 — Admin Dashboard` *(awaiting explicit user approval)*
+- **Next Recommended Action:** Build Admin Overview live operational metrics, Customer & Enquiry triage, Project & Quotation management, Portfolio/Testimonials CMS + public portfolio wiring, Team/Role permissions, Audit Logs, and Platform Settings.
 
 ---
 
 ## Session Log
+
+### 2026-11-25 — Phase 6: Customer Portal
+- **Completed Work:**
+  - Built project intake validation, MIME + extension + 25 MB bucket policy validation, traversal-safe filename sanitization, `project-attachments` path builder, and pure tenant/download authorization guards (`src/lib/validations/projects.ts`) alongside expanded unit tests (`src/lib/validations/projects.test.ts`, `src/lib/email/templates.test.ts`).
+  - Enhanced `DynamicServiceForm` (`src/components/services/DynamicServiceForm.tsx`) to support interactive `file` brief inputs in submit mode while preserving Phase 5 preview mode, and cloned `schemaSnapshot` inside `validateDynamicBriefSubmission` (`src/lib/validations/dynamic-form.ts`).
+  - Built customer-scoped portal queries (`src/lib/services/portal.service.ts`), shared attachment upload helper (`src/lib/services/attachment-upload.service.ts`), notification Server Actions (`src/actions/portal.actions.ts`), Resend submission emails (`src/lib/email/{templates.ts,resend.ts}`), and IP/User-Agent audit log metadata (`src/lib/services/audit.service.ts`).
+  - Built authenticated Route Handlers: `POST /api/projects` (atomic project + immutable `form_schema_snapshot` + `project_form_responses` + validated `project-attachments` upload + status history + notification + audit log), `POST /api/projects/[id]/files`, and `GET /api/projects/files/[fileId]/download` (tenant-verified 60s signed URLs for `project-attachments` and accessible `project-deliverables`).
+  - Built Customer Portal UI: upgraded `src/app/dashboard/layout.tsx` and `src/app/dashboard/page.tsx`, `/dashboard/projects/new`, `/dashboard/projects`, `/dashboard/projects/[id]` (Brief Snapshot, Files & Deliverables + additional attachment uploader, Timeline, Quotations, Messages), `/dashboard/files`, and `/dashboard/notifications`.
+- **Files Created / Modified:**
+  - Validation, Services & Actions: `src/lib/validations/{projects.ts,projects.test.ts,dynamic-form.ts}`, `src/lib/utils/format.ts`, `src/lib/email/{templates.ts,templates.test.ts,resend.ts}`, `src/lib/services/{audit.service.ts,portal.service.ts,attachment-upload.service.ts}`, `src/actions/portal.actions.ts`
+  - API Routes: `src/app/api/projects/route.ts`, `src/app/api/projects/[id]/files/route.ts`, `src/app/api/projects/files/[fileId]/download/route.ts`
+  - Portal UI & Pages: `src/components/services/DynamicServiceForm.tsx`, `src/components/portal/{ProjectStatusBadge,StartProjectForm,ProjectsListClient,ProjectAttachmentUploader,NotificationsListClient}.tsx`, `src/app/dashboard/{layout.tsx,page.tsx,files/page.tsx,notifications/page.tsx,projects/page.tsx,projects/new/page.tsx,projects/[id]/page.tsx}`
+  - Docs: `PROJECT_CONTEXT.md`, `IMPLEMENTATION_ROADMAP.md`, `DEVELOPMENT_LOG.md`, `AI_NOTES.md`
+- **Verification Results:**
+  - `npm run format:check`, `npm test` (`18/18` unit tests), `npm run typecheck`, `npm run lint`, and `npm run build` (`39/39` routes) verified after final edits.
+  - Live `next start` smoke test verified `307` login redirects on protected `/dashboard/*` routes, `401` JSON on unauthenticated `/api/projects*` endpoints, and `0` static bundle secret leaks.
+- **Unresolved / Deferred Setup:**
+  - End-to-end live PostgreSQL + Storage tests (multi-customer RLS tenant isolation against Supabase DB, real file upload/signed URL download in `project-attachments`, and submission with Resend email delivery) await `.env.local` Supabase/Resend credentials.
+- **Pending Tasks:**
+  - Await explicit user approval for **Phase 7 — Admin Dashboard**.
+
+---
 
 ### 2026-11-25 — Phase 5: Dynamic Services, Form Builder, and Public CMS Wiring
 - **Completed Work:**
