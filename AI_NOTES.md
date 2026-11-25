@@ -21,7 +21,7 @@
   - `Logo.png` (`818×613`) -> `/logos/Logo.png`
   - `Horizontal-E-Logo.png` (`2110×527`) -> `/logos/Horizontal-E-Logo.png`
   - `Vertical-E-Logo.png` (`1296×929`) -> `/logos/Vertical-E-Logo.png`
-  - `Hero_image3.png`, `Hero_image2.png`, `Hero_image1.png` (`2400×1792`) -> optimized `public/images/hero-studio-{3,2,1}.webp` (`1800×1344`) rendered as a continuous depth-emergence loop in `HeroVisual.tsx` + `src/lib/motion/{hero-slides.ts,hero-slides.test.ts}`
+  - `Hero_image1.png`, `Hero_image2.png`, `Hero_image3.png` (`2400×1792`) -> optimized `public/images/hero-studio-{1,2,3}.webp` (`1800×1344`) rendered as a continuous depth-emergence loop (`1 -> 2 -> 3`) in `HeroVisual.tsx` + `src/lib/motion/{hero-slides.ts,hero-slides.test.ts}`
   - `favicon_io/*` -> `public/` (`favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`, `android-chrome-512x512.png`, updated `site.webmanifest`)
 
 ---

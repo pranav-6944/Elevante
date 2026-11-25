@@ -7,10 +7,10 @@ export interface HeroSlide {
 
 export const HERO_SLIDES: readonly HeroSlide[] = [
   {
-    id: "hero-3",
-    src: "/images/hero-studio-3.webp",
-    alt: "ELEVANTE 3D WebGL showcase featuring interactive AI workflows, analytics graphs, and brand typography boards",
-    label: "3D Web & AI Workflows",
+    id: "hero-1",
+    src: "/images/hero-studio-1.webp",
+    alt: "Engineering and design team collaborating around the ELEVANTE digital solutions workspace",
+    label: "Studio Collaboration",
   },
   {
     id: "hero-2",
@@ -19,10 +19,10 @@ export const HERO_SLIDES: readonly HeroSlide[] = [
     label: "Multi-Stack Dashboards",
   },
   {
-    id: "hero-1",
-    src: "/images/hero-studio-1.webp",
-    alt: "Engineering and design team collaborating around the ELEVANTE digital solutions workspace",
-    label: "Studio Collaboration",
+    id: "hero-3",
+    src: "/images/hero-studio-3.webp",
+    alt: "ELEVANTE 3D WebGL showcase featuring interactive AI workflows, analytics graphs, and brand typography boards",
+    label: "3D Web & AI Workflows",
   },
 ];
 
@@ -32,4 +32,3 @@ export function getNextHeroSlideIndex(currentIndex: number, total: number): numb
   if (total <= 0) return 0;
   return (currentIndex + 1) % total;
 }
-

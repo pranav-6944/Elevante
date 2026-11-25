@@ -4,10 +4,10 @@ import path from "node:path";
 import test from "node:test";
 import { getNextHeroSlideIndex, HERO_SLIDES } from "./hero-slides.ts";
 
-test("HERO_SLIDES preserves 3 -> 2 -> 1 loop order and asset files exist", () => {
+test("HERO_SLIDES preserves 1 -> 2 -> 3 loop order and asset files exist", () => {
   assert.deepEqual(
     HERO_SLIDES.map((s) => s.src),
-    ["/images/hero-studio-3.webp", "/images/hero-studio-2.webp", "/images/hero-studio-1.webp"]
+    ["/images/hero-studio-1.webp", "/images/hero-studio-2.webp", "/images/hero-studio-3.webp"]
   );
 
   for (const slide of HERO_SLIDES) {
