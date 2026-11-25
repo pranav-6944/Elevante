@@ -26,6 +26,7 @@ import {
 } from "@/lib/services/catalog.service";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ScrambleText } from "@/components/common/ScrambleText";
+import { AboutElevanteSection } from "@/components/marketing/AboutElevanteSection";
 import { CapabilitiesGrid } from "@/components/marketing/CapabilitiesGrid";
 import { FaqAccordion } from "@/components/marketing/FaqAccordion";
 import { FoundersSection } from "@/components/marketing/FoundersSection";
@@ -172,51 +173,7 @@ export default async function HomePage() {
       </section>
 
       {/* 2. Agency Introduction */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <div className="bg-card grid gap-8 rounded-3xl border p-8 shadow-xs md:grid-cols-[1.2fr_0.8fr] md:p-12">
-            <div className="space-y-4">
-              <p className="text-secondary text-xs font-semibold tracking-widest uppercase">
-                About ELEVANTE
-              </p>
-              <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl">
-                {introSection?.title ||
-                  "One integrated agency for product engineering, data intelligence, and brand clarity."}
-              </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                {introSection?.subtitle ||
-                  "Instead of splitting strategy across disconnected freelancers, ELEVANTE brings full-stack software engineering, automation pipelines, AI integration, and visual brand systems together under a single structured delivery workflow."}
-              </p>
-              <div className="pt-1">
-                <Button asChild variant="link" className="text-secondary px-0">
-                  <Link href="/about" className="inline-flex items-center gap-1.5">
-                    <span>Meet the founders &amp; agency philosophy</span>
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4 self-center">
-              <div className="bg-background rounded-2xl border p-4">
-                <p className="font-heading text-foreground text-2xl font-bold">9</p>
-                <p className="text-muted-foreground text-xs">Core Digital Disciplines</p>
-              </div>
-              <div className="bg-background rounded-2xl border p-4">
-                <p className="font-heading text-foreground text-2xl font-bold">100%</p>
-                <p className="text-muted-foreground text-xs">Custom Scoped Quotations</p>
-              </div>
-              <div className="bg-background rounded-2xl border p-4">
-                <p className="font-heading text-foreground text-2xl font-bold">4-Stage</p>
-                <p className="text-muted-foreground text-xs">Transparent Client Workflow</p>
-              </div>
-              <div className="bg-background rounded-2xl border p-4">
-                <p className="font-heading text-foreground text-2xl font-bold">SSR + RLS</p>
-                <p className="text-muted-foreground text-xs">Production-Grade Foundation</p>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+      <AboutElevanteSection title={introSection?.title} subtitle={introSection?.subtitle} />
 
       {/* 3. Services & Capabilities */}
       <section className="bg-card/45 border-y py-16 sm:py-20">
