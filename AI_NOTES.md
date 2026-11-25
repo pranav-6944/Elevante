@@ -21,6 +21,7 @@
   - `Logo.png` (`818×613`) -> `/logos/Logo.png`
   - `Horizontal-E-Logo.png` (`2110×527`) -> `/logos/Horizontal-E-Logo.png`
   - `Vertical-E-Logo.png` (`1296×929`) -> `/logos/Vertical-E-Logo.png`
+  - `Hero_image.png` (`2400×1792`) -> optimized `public/images/hero-studio.webp` (`1800×1344`) rendered in `HeroVisual.tsx` (replacing previous WebGL particle globe)
   - `favicon_io/*` -> `public/` (`favicon.ico`, `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png`, `android-chrome-192x192.png`, `android-chrome-512x512.png`, updated `site.webmanifest`)
 
 ---

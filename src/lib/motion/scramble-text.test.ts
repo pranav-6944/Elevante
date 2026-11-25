@@ -25,4 +25,3 @@ test("computeScrambleFrame preserves whitespace, locks left-to-right, and settle
   });
   assert.equal(customCharset, "#####");
 });
-

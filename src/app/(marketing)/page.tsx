@@ -94,8 +94,22 @@ export default async function HomePage() {
       />
 
       {/* 1. Hero Section */}
-      <section className="bg-card/55 relative border-b py-14 sm:py-20 lg:py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-6 lg:grid-cols-[1.15fr_0.85fr]">
+      <section className="relative overflow-hidden border-b bg-[#f3f6f4] py-12 sm:py-16 lg:py-20">
+        {/* Atmospheric light-to-studio-teal backdrop blending left copy cleanly into right studio visual */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_24%,rgba(49,156,120,0.09),transparent_48%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden lg:block lg:bg-[linear-gradient(102deg,#f3f6f4_0%,#eff4f1_40%,#dce9e5_46%,#467375_52%,#16464a_58%,#0b1c26_76%,#081921_100%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 right-[-6%] hidden size-[680px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,156,120,0.22)_0%,rgba(18,59,63,0.2)_45%,transparent_72%)] blur-3xl lg:block"
+        />
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-6 lg:grid-cols-[1.02fr_1.06fr] lg:gap-8">
           <div className="space-y-6">
             <div className="bg-card text-secondary inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-xs">
               <Sparkles className="text-brand-green size-3.5" aria-hidden="true" />

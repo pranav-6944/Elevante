@@ -95,4 +95,3 @@ export function ScrambleText({
     </span>
   );
 }
-

@@ -1,97 +1,66 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { Component, type ReactNode, useState, useSyncExternalStore } from "react";
-import { HeroFallbackGraphic } from "./HeroFallbackGraphic";
+import type { PointerEvent } from "react";
+import Image from "next/image";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 
-const HeroSceneCanvas = dynamic(() => import("./HeroSceneCanvas"), {
-  ssr: false,
-  loading: () => <HeroFallbackGraphic />,
-});
-
-interface BoundaryState {
-  hasError: boolean;
-}
-
-class WebGLErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
-  BoundaryState
-> {
-  state: BoundaryState = { hasError: false };
-
-  static getDerivedStateFromError(): BoundaryState {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback;
-    }
-    return this.props.children;
-  }
-}
-
-let cachedWebGLSupport: boolean | null = null;
-
-function hasWebGLSupport(): boolean {
-  if (cachedWebGLSupport !== null) {
-    return cachedWebGLSupport;
-  }
-  try {
-    const canvas = document.createElement("canvas");
-    cachedWebGLSupport = Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-  } catch {
-    cachedWebGLSupport = false;
-  }
-  return cachedWebGLSupport;
-}
-
-function subscribeReducedMotion(onStoreChange: () => void) {
-  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-  media.addEventListener("change", onStoreChange);
-  return () => media.removeEventListener("change", onStoreChange);
-}
-
-function getClient3DCapability(): boolean {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  return !prefersReducedMotion && hasWebGLSupport();
-}
+const TILT_SPRING = { stiffness: 220, damping: 24, mass: 0.6 } as const;
 
 export function HeroVisual() {
-  const [webglLost, setWebglLost] = useState(false);
-  const canRender3D = useSyncExternalStore(
-    subscribeReducedMotion,
-    getClient3DCapability,
-    () => false
-  );
+  const prefersReducedMotion = useReducedMotion();
+  const rotateXTarget = useMotionValue(0);
+  const rotateYTarget = useMotionValue(0);
+  const rotateX = useSpring(rotateXTarget, TILT_SPRING);
+  const rotateY = useSpring(rotateYTarget, TILT_SPRING);
 
-  if (!canRender3D || webglLost) {
-    return (
-      <div className="h-[320px] w-full sm:h-[380px]">
-        <HeroFallbackGraphic />
-      </div>
-    );
+  function handlePointerMove(e: PointerEvent<HTMLDivElement>) {
+    if (prefersReducedMotion || e.pointerType !== "mouse") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    rotateXTarget.set(-ny * 4.5);
+    rotateYTarget.set(nx * 5);
+  }
+
+  function handlePointerLeave() {
+    rotateXTarget.set(0);
+    rotateYTarget.set(0);
   }
 
   return (
-    <div className="border-border/80 bg-card/80 relative h-[320px] w-full overflow-hidden rounded-3xl border shadow-sm sm:h-[380px]">
+    <div
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative mx-auto w-full max-w-[600px] rounded-3xl bg-[#0b1c26] p-1.5 shadow-2xl ring-1 ring-white/10 lg:-mr-4 lg:max-w-none lg:rounded-none lg:bg-transparent lg:p-0 lg:shadow-none lg:ring-0 xl:-mr-10"
+    >
+      {/* Ambient emerald-teal bloom behind the artwork matching edge vignette hues */}
       <div
         aria-hidden="true"
-        className="bg-brand-green/15 pointer-events-none absolute -top-24 -right-24 size-64 rounded-full blur-3xl"
+        className="pointer-events-none absolute -inset-6 hidden rounded-full bg-[radial-gradient(circle_at_52%_50%,rgba(49,156,120,0.26)_0%,rgba(22,70,74,0.22)_46%,transparent_76%)] blur-2xl lg:block"
       />
-      <div
-        aria-hidden="true"
-        className="bg-brand-navy/15 pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full blur-3xl"
-      />
-      <WebGLErrorBoundary fallback={<HeroFallbackGraphic />}>
-        <HeroSceneCanvas onWebGLError={() => setWebglLost(true)} />
-      </WebGLErrorBoundary>
-      <div className="bg-card/90 pointer-events-none absolute right-4 bottom-4 left-4 flex items-center justify-between rounded-xl border px-4 py-2.5 text-xs backdrop-blur">
-        <span className="font-heading text-foreground font-semibold">
-          ELEVANTE 3D &amp; Web Studio
-        </span>
-        <span className="text-muted-foreground">Interactive WebGL</span>
-      </div>
+
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 14, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          rotateX: prefersReducedMotion ? 0 : rotateX,
+          rotateY: prefersReducedMotion ? 0 : rotateY,
+          transformPerspective: 1200,
+        }}
+        className="relative [mask-image:radial-gradient(ellipse_93%_93%_at_50%_50%,#000_74%,transparent_100%)] will-change-transform [-webkit-mask-image:radial-gradient(ellipse_93%_93%_at_50%_50%,#000_74%,transparent_100%)]"
+      >
+        <Image
+          src="/images/hero-studio.webp"
+          alt="ELEVANTE Product Studio showcase featuring multi-stack dashboards, workflow orchestration, AI graph architecture, and brand design"
+          width={1800}
+          height={1344}
+          priority
+          sizes="(min-width: 1280px) 640px, (min-width: 1024px) 52vw, 100vw"
+          className="h-auto w-full object-contain drop-shadow-[0_24px_48px_rgba(8,21,29,0.45)] select-none"
+        />
+      </motion.div>
     </div>
   );
 }
